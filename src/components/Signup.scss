@@ -8,25 +8,10 @@
     box-sizing: border-box;
 }
 
-.logo-design {
+.logo{
     display: flex;
-    align-items: baseline;
-    font-size: 40px;
-    letter-spacing: 8px;
     justify-content: center;
-    margin: 100px 0px;
-    .first-div {
-      color: #613EEA;
-    }
-  
-    .second-div {
-      padding: 20px 30px;
-      color: white;
-      background-color: #613EEA;
-      border-radius: 262% / 337%;
-      border-top-left-radius: 0;
-    }
-  }
+}
   
   p {
     letter-spacing: 5px;

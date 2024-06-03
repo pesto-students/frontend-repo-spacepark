@@ -4,6 +4,7 @@ import './Login.scss';
 import { Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import Logo from '../Logo/Logo';
 
 const LoginSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -15,10 +16,10 @@ const LoginSchema = Yup.object().shape({
 const Login = () => {
   return (
     <div>
-      <div className='logo-design'>
-        <div className='first-div'>Space</div>
-        <div className='second-div'>Park</div>
-      </div>
+        <div className='login-logo'>
+      <Logo/>
+
+        </div>
 
       <p>Welcome to the Car Parking App</p>
 
