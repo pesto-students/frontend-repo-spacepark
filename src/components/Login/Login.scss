@@ -27,6 +27,15 @@
       border-top-left-radius: 0;
     }
   }
+
+  span{
+    letter-spacing: 3px;
+    color: #613EEA;
+  }
+
+  .link{
+    text-decoration: none;
+  }
   
   p {
     letter-spacing: 5px;
@@ -77,16 +86,6 @@
     background-color: #613EEA;
   }
   
-  .para-text{
-    letter-spacing: 2px;
-    font-size: 18px;
-    a{
-        text-decoration: none;
-    }
-    span{
-        color: #613EEA;
-      }
-  }
   .error {
     color: red;
     font-size: 18px;
