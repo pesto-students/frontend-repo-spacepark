@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Slider from 'react-slick';
 import HomeIcon from '../assets/home.svg';
 import SmallLogo from './Logo/SmallLogo';
 import './Home.scss';
@@ -55,7 +54,7 @@ const Home = () => {
     }, 3000); // Change slide every 3 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [screens.length]);
 
   return (
     <div className='home-page'>
