@@ -1,0 +1,24 @@
+/* src/components/Signup.scss */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+*{
+    font-family: 'Roboto', sans-serif;
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.home-page{
+    .home-logo{
+        margin-left: 15px;
+        margin-right: 15px;
+        margin-top: 10px;
+        // width: 200px;
+
+    }
+    h1{
+        text-align: center;
+    }
+    img{
+        width :100%
+    }
+}

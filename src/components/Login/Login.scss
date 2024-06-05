@@ -1,0 +1,77 @@
+/* src/components/Signup.scss */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+*{
+    font-family: 'Roboto', sans-serif;
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+    .login-logo{
+        display: flex;
+        justify-content: center;
+    }
+  span{
+    letter-spacing: 3px;
+    color: #613EEA;
+  }
+
+  .link{
+    text-decoration: none;
+  }
+  
+  p {
+    letter-spacing: 5px;
+    font-size: 18px;
+    text-align: center;
+    margin: 80px 30px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    margin: 0 auto;
+  }
+  
+  form > div {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  
+  input {
+    padding: 10px;
+    width: 100%;
+    font-size: 20px;
+    border: none;
+    border-bottom: 1px solid gray;
+    outline: none;
+    transition: border-bottom-color 0.3s;
+  }
+  
+  input:focus {
+    border-bottom-color: #0056b3;
+  }
+  
+  button {
+    padding: 18px 15px;
+    font-size: 20px;
+    background-color: #613EEA;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s;
+    border-bottom: none;
+  }
+  
+  button:hover {
+    background-color: #613EEA;
+  }
+  
+  .error {
+    color: red;
+    font-size: 18px;
+    margin-top: 15px;
+  }
+  
