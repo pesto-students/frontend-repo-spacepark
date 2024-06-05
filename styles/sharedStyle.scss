@@ -1,0 +1,75 @@
+// breakpoints
+$screen-sm: 576px;
+$screen-md: 768px;
+$screen-lg: 992px;
+$screen-xl: 1200px;
+$screen-xxl: 1600px;
+
+// colors
+$primary-color: #023047;
+$text-color: #f7f2f7;
+$text-color-off: rgba(255, 255, 255, 0.8);
+$secondary-color-dark: #219ebc;
+$secondary-color-light: #8ecae6;
+$contrast-color-dark: #fb8500;
+$contrast-color-light: #ffb703;
+$slate: #8892b0;
+
+// font-sizes
+$page-heading: clamp(37px, 8vw, 60px);
+$section-heading: clamp(30px, 6vw, 35px);
+
+$nav-height: 50.5px;
+
+$font-heading: "Poppins", sans-serif;
+
+$p-font-size: 18px;
+
+// media queries
+@mixin include-sm-up {
+  @media only screen and (min-width: $screen-sm) {
+    @content;
+  }
+}
+
+@mixin include-md-up {
+  @media only screen and (min-width: $screen-md) {
+    @content;
+  }
+}
+
+@mixin include-lg-up {
+  @media only screen and (min-width: $screen-lg) {
+    @content;
+  }
+}
+
+@mixin include-xl-up {
+  @media only screen and (min-width: $screen-xl) {
+    @content;
+  }
+}
+
+@mixin include-xxl-up {
+  @media only screen and (min-width: $screen-xxl) {
+    @content;
+  }
+}
+
+@mixin hide-mobile {
+  @media only screen and (max-width: calc($screen-sm - 1px)) {
+    display: none !important;
+  }
+}
+
+@mixin hide-desktop {
+  @media only screen and (min-width: $screen-md) {
+    display: none !important;
+  }
+}
+
+@mixin show-desktop {
+  @media only screen and (min-width: $screen-md) {
+    display: block !important;
+  }
+}
