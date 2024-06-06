@@ -9,6 +9,7 @@ import SearchComponent from "./components/SearchComponent.js";
 import MapComponent from "./components/MapComponent.js";
 import Payment from "./components/Payment.js";
 import RegisterParkingSpace from "./components/RegisterParkingSpace/RegisterParkingSpace.jsx";
+import TicketScreen from "./components/TicketsScreen/TicketScreen.jsx";
 //import Dashboard from "./components/Dashboard.jsx";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/map" element={<MapComponent />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/test" element={<RegisterParkingSpace />} />
+          <Route path="/tickets" element={<TicketScreen />} />
         </Routes>
       </Router>
     </>
