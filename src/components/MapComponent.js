@@ -6,8 +6,7 @@ import {
   Popup,
   useMapEvents,
 } from "react-leaflet";
-import { Container, Row, Col, Button } from "react-bootstrap";
-//from where
+import { Container, Row, Col } from "react-bootstrap";
 import "leaflet/dist/leaflet.css";
 import { useAtom } from "jotai";
 import { locationStateAtom } from "./SearchComponent";

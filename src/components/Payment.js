@@ -60,31 +60,31 @@ function Payment() {
     }
   };
 
-  const verifyPayment = async (response) => {
-    try {
-      const res = await fetch('http://localhost:8000/api/payment/pay/verify-payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          razorpay_order_id: response.razorpay_order_id,
-          razorpay_payment_id: response.razorpay_payment_id,
-          razorpay_signature: response.razorpay_signature,
-        })
-      });
+  // const verifyPayment = async (response) => {
+  //   try {
+  //     const res = await fetch('http://localhost:8000/api/payment/pay/verify-payment', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         razorpay_order_id: response.razorpay_order_id,
+  //         razorpay_payment_id: response.razorpay_payment_id,
+  //         razorpay_signature: response.razorpay_signature,
+  //       })
+  //     });
 
-      const data = await res.json();
-      if (data.success) {
-        alert('Payment verification successful');
-      } else {
-        alert('Payment verification failed');
-      }
-    } catch (error) {
-      console.error('Error verifying payment:', error);
-      alert('Error verifying payment');
-    }
-  };
+  //     const data = await res.json();
+  //     if (data.success) {
+  //       alert('Payment verification successful');
+  //     } else {
+  //       alert('Payment verification failed');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error verifying payment:', error);
+  //     alert('Error verifying payment');
+  //   }
+  // };
 
   const logFailedPayment = async (response, orderId) => {
     try {
