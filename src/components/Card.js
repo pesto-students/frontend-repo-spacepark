@@ -3,7 +3,7 @@ import { Card, CardBody, CardTitle, CardText } from 'reactstrap';
 
 function CardView() {
   return (
-    <Card className="w-50 mx-auto p-4 mt-3 shadow">
+    <Card className="p-4 mt-3 shadow ">
       <CardBody>
         <CardTitle tag="h5" className='text-center pri-color mb-3 pb-2 bold'>Welcome to spacepark app</CardTitle>
         <CardText>

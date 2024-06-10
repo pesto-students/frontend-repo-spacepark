@@ -34,7 +34,13 @@ h3{
 }   
 
 .linear-color{
-    background-image: linear-gradient(to top right, #613eea 20%, white 20%)
+  height :300px;
+  position: absolute;
+  bottom: 0;
+  left: 0; /* Optional: Set left to 0 for full width */
+  width: 100%; /* Optional: Set width to 100% for full width */
+  background-image: linear-gradient(to top right, #613eea 20%, white 20%);
+    // background-image: linear-gradient(to top right, #613eea 20%, white 20%)
 
 }
 
@@ -91,7 +97,7 @@ h3{
 
   .field-val{
     border-bottom: 1px solid gray !important;
-    padding: 12px 20px !important;
+    padding: 10px 16px !important;
     font-size: 20px !important;
     border-top: 0 !important;
     border-left: 0 !important;
@@ -106,3 +112,53 @@ h3{
   .f-20{
     font-size: 20px !important;
   }
+
+  .form-check{
+    // padding-left: 2.5em !important; 
+    margin: 1.5em 16px !important
+  }
+
+  .f-25{
+    font-size: 25px !important;
+    }
+    
+    .border-cl{
+      margin-right: 1em !important;
+      border: 1px solid gray !important;
+      border-radius: 3px !important;
+  }
+
+  .custom-card{
+    max-width: 450px;
+  }
+
+  .mt-60{
+    margin-top: 60px !important;
+  }
+
+  .search-com{
+    border: 1px solid gray !important;
+    padding: 12px !important;
+    // max-width: 500px !important;
+  }
+
+  .parking-spaces-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .parking-space-item {
+    padding: 10px;
+    margin-bottom: 5px;
+    color: #613eea;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .parking-space-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+
+  

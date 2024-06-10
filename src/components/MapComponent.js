@@ -12,7 +12,7 @@ import { useAtom } from "jotai";
 import { locationStateAtom } from "./SearchComponent";
 import SearchComponent from "./SearchComponent";
 import L from "leaflet";
-import Card from "./Card";
+import ParkingForm from "./ParkingForm/ParkingForm";
 
 const customIcon = new L.Icon({
   iconUrl: "https://leafletjs.com/examples/custom-icons/leaf-red.png",
@@ -38,17 +38,25 @@ const AddMarkerToClick = ({ setMarkers }) => {
 const MapComponent = () => {
   const [markers, setMarkers] = useState([]);
   const [locationState] = useAtom(locationStateAtom);
-  const API_ACCESS_TOKEN = process.env.REACT_MAP_API_KEY;
+  const API_ACCESS_TOKEN = process.env.REACT_APP_MAP_API_KEY;
 
   return (
-    <Container fluid>
+    <Container fluid className="">
       <Row>
         <Col
           md={6}
-          className="d-flex flex-column align-items-center justify-content-center linear-color"
+          className="d-flex flex-column align-items-center justify-content-center mb-40 mt-60"
         >
+          <Row className="flex-column">
+            <Col className="w-100">
           <SearchComponent />
-          <Card />
+            
+            </Col>
+            <Col className="">
+            <ParkingForm/>
+          {/* <Card /> */}
+            </Col>
+          </Row>
         </Col>
         <Col md={6}>
           <MapContainer
@@ -83,6 +91,7 @@ const MapComponent = () => {
           </MapContainer>
         </Col>
       </Row>
+      {/* <div className="linear-color position-absolute bottom-0 w-100"></div> */}
     </Container>
   );
 };

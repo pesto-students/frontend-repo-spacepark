@@ -1,10 +1,8 @@
-import React from "react";
-import { Formik, Field, ErrorMessage } from "formik";
+import React, { useState } from "react";
+import { Form, FormGroup, Label, Input, Button, Alert, Container } from "reactstrap";
 import * as yup from "yup";
-import "./register.scss";
-//import { submitParkingSpace } from "./registerformsubmission";
 
-const parkingSpaceSchema = yup.object({
+const parkingSpaceSchema = yup.object().shape({
   parkOwnerName: yup
     .string()
     .required("Park owner name is required")
@@ -19,101 +17,112 @@ const parkingSpaceSchema = yup.object({
 });
 
 const RegisterParkingSpace = () => {
-  const services = [
-    { value: "evCharging", label: "EV Charging" },
-    { value: "carWash", label: "Car Wash" },
-    { value: "carPark", label: "Car Park" },
-  ];
+  const [parkingSpace, setParkingSpace] = useState({
+    parkOwnerName: "",
+    numberOfSpaces: "",
+    location: "",
+    services: [],
+  });
+
+  const [error, setError] = useState(null);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setParkingSpace({ ...parkingSpace, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    parkingSpaceSchema
+      .validate(parkingSpace, { abortEarly: false })
+      .then(() => {
+        // Handle form submission here
+      })
+      .catch((validationError) => {
+        setError(validationError.errors[0]);
+      });
+  };
 
   return (
-    <div className="registration-container">
-      <Formik
-        initialValues={{
-          parkOwnerName: "",
-          numberOfSpaces: "",
-          location: "",
-          services: [],
-        }}
-        validationSchema={parkingSpaceSchema}
-        onSubmit={() => {}} // Use custom submitParkingSpace function here
-      >
-        {({ handleSubmit, isSubmitting, isValid }) => (
-          <form onSubmit={handleSubmit} className="registration-form">
-            <div className="form-group">
-              <label htmlFor="parkOwnerName">Park Owner Name</label>
-              <Field
-                type="text"
-                name="parkOwnerName"
-                placeholder="Enter owner name"
-                className="form-control"
-              />
-              <ErrorMessage
-                name="parkOwnerName"
-                component="div"
-                className="invalid-feedback"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="numberOfSpaces">Number of Spaces Available</label>
-              <Field
-                type="number"
-                name="numberOfSpaces"
-                placeholder="Enter number of spaces"
-                className="form-control"
-              />
-              <ErrorMessage
-                name="numberOfSpaces"
-                component="div"
-                className="invalid-feedback"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="location">Location</label>
-              <Field
-                type="text"
-                name="location"
-                placeholder="Enter location"
-                className="form-control"
-              />
-              <ErrorMessage
-                name="location"
-                component="div"
-                className="invalid-feedback"
-              />
-            </div>
-            <div className="form-group">
-              <label>Services Offered (select at least one)</label>
-              {services.map((service) => (
-                // add them in one line each service
-                <div key={service.value} className="form-check">
-                  <Field
-                    type="checkbox"
-                    id={service.value}
-                    name="services"
-                    value={service.value}
-                  />
-                  <label className="form-check-label" htmlFor={service.value}>
-                    {service.label}
-                  </label>
-                </div>
-              ))}
-              <ErrorMessage
+    <Container className="login-container" fluid>
+      <h2 className="text-center mb-4">Register Parking Space</h2>
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Input
+            type="text"
+            name="parkOwnerName"
+            id="parkOwnerName"
+            placeholder="Enter owner name"
+            className='field-val mb-40'
+            value={parkingSpace.parkOwnerName}
+            onChange={handleInputChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Input
+            type="number"
+            name="numberOfSpaces"
+            id="numberOfSpaces"
+            placeholder="Enter number of spaces"
+            className='field-val mb-40'
+            value={parkingSpace.numberOfSpaces}
+            onChange={handleInputChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Input
+            type="text"
+            name="location"
+            id="location"
+            placeholder="Enter your location"
+            className='field-val mb-40'
+            value={parkingSpace.location}
+            onChange={handleInputChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label className="f-20">Services Offered (select at least one)</Label>
+          <div>
+            <FormGroup check  className="f-20">
+              <Input
+                type="checkbox"
+                id="evCharging"
                 name="services"
-                component="div"
-                className="invalid-feedback"
+                value="evCharging"
+                // className='field-val mb-40'
+                onChange={handleInputChange}
               />
-            </div>
-            <button
-              type="submit"
-              disabled={isSubmitting || !isValid}
-              className="btn btn-primary"
-            >
-              {isSubmitting ? "Submitting..." : "Register Parking Space"}
-            </button>
-          </form>
-        )}
-      </Formik>
-    </div>
+              <Label check for="evCharging" className="f-20">EV Charging</Label>
+            </FormGroup>
+            <FormGroup check  className="f-20">
+              <Input
+                type="checkbox"
+                id="carWash"
+                name="services"
+                value="carWash"
+                className="f-20 border-cl"
+                onChange={handleInputChange}
+              />
+              <Label check for="carWash">Car Wash</Label>
+            </FormGroup>
+            <FormGroup check  className="f-20">
+              <Input
+                type="checkbox"
+                id="carPark"
+                name="services"
+                value="carPark"
+                onChange={handleInputChange}
+              />
+              <Label check for="carPark" className="f-20">Car Park</Label>
+            </FormGroup>
+          </div>
+        </FormGroup>
+        {error && <Alert color="danger">{error}</Alert>}
+        <Button type="submit" color="primary" className="w-100 mt-3">
+          Register
+        </Button>
+      </Form>
+    </Container>
   );
 };
 
