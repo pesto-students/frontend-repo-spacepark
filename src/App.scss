@@ -121,6 +121,10 @@ h3{
   .f-25{
     font-size: 25px !important;
     }
+
+    .fs-20{
+      font-size: 20px !important;
+    }
     
     .border-cl{
       margin-right: 1em !important;
@@ -162,6 +166,11 @@ h3{
   
   .parking-space-item:hover {
     background-color: #f0f0f0;
+  }
+
+  .active-menu{
+    cursor: pointer;
+    background-color: lightgrey;
   }
   
 

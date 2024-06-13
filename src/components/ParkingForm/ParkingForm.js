@@ -53,7 +53,6 @@ const ParkingForm = () => {
 
       if (response.status === 201) {
         const { token, user } = response.data;
-        console.log(user, token);
         store.set('role', user.role);
         store.set("token", token);
 

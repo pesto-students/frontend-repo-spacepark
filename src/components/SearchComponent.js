@@ -25,7 +25,6 @@ const SearchComponent = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSpaceBooking = (parkingspace) => {
-    console.log(parkingspace, 'Parking spaces');
   }
 
   // Define throttled function to avoid making too many requests
@@ -38,7 +37,6 @@ const SearchComponent = () => {
         const results = await nominatim.search({ q: searchText, addressdetails: true });
         if (results && results.length > 0) {
           const { lat, lon, display_name } = results[0];
-          console.log(lat, lon, display_name , "lat, lon, display_name ");
           setLocation({ placeName: display_name, lat: parseFloat(lat), lng: parseFloat(lon) });
 
           const apiResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/parkingSpaces?location=${searchText}`, { lat, lon });
