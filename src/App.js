@@ -16,6 +16,7 @@ import UserFormComponent from "./components/AdminDashBoard/FormComponents/UserFo
 import ParkingSpacesForm from "./components/AdminDashBoard/FormComponents/ParkingSpacesForm.js";
 import AboutPage from "./components/StaticComponents/AboutUs.jsx";
 import BlogPage from "./components/StaticComponents/BlogPage.jsx";
+import Contact from "./components/Contact/Contact.jsx";
 
 
 function App() {
@@ -70,6 +71,11 @@ function App() {
 <Route
             path="/blog"
             element={isAuthenticated() ? <BlogPage /> : <Navigate to="/login" />}
+          />
+
+        <Route
+            path="/contact"
+            element={isAuthenticated() ? <Contact /> : <Navigate to="/login" />}
           />
         </Routes>
         
