@@ -174,4 +174,27 @@ h3{
   }
   
 
+
+  .parking-spaces-list .selected {
+    background-color: #e0f7fa;
+    border: 1px solid #00bcd4;
+    border-radius: 4px;
+    padding: 10px;
+  }
   
+  .parking-space-item {
+    cursor: pointer;
+  }
+  
+  .parking-space-item:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .parking-space-item:active {
+    background-color: #e0e0e0;
+  }
+  
+  
+  .mr-10{
+    margin-right: 10px !important;
+  }

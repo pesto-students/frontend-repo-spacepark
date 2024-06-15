@@ -1,48 +1,60 @@
-// import React from 'react'
-
-// function ParkingForm() {
-//   return (
-//     <div>ParkingForm</div>
-//   )
-// }
-
-// export default ParkingForm
-
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Form, Container, FormGroup, Input, Button, Alert } from 'reactstrap';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Form, Container, FormGroup, Input, Alert } from 'reactstrap';
 import axios from 'axios';
-import store from 'store'; // import the store
+import store from 'store';
 import Select from 'react-select';
-import DateRangePicker from './DatePicker';
+import DateTimePicker from './DatePicker';
+import Payment from '../Payment';
+import { atom, useAtom } from 'jotai';
+import { serviceAtom, successResponseAtom } from '../../atom';
+
+export const formDataAtom = atom({
+  carNumber: '',
+  mobile: '',
+  services: [],
+});
 
 const ParkingForm = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    mobile: '',
-  });
-
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // useNavigate hook to navigate
+  const navigate = useNavigate();
+  const [services] = useAtom(serviceAtom); // Use serviceAtom
+  const [formData, setFormData] = useAtom(formDataAtom); // Use formDataAtom
+  const [dateRange, setDateRange] = useState(null); // Separate state for date range
+  const [isFormValid, setIsFormValid] = useState(false); // State to check form validity
+
+  useEffect(() => {
+    console.log(formData, 'form Data');
+  }, [formData]);
+
+  // Validation logic
+  useEffect(() => {
+    const isValid = formData.services.length > 0 && dateRange;
+    setIsFormValid(isValid);
+  }, [formData, dateRange]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleServiceChange = (selectedOptions) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      services: selectedOptions.map(option => option.value),
+    }));
+  };
+
+  const handleDateRangeChange = (dateRange) => {
+    setDateRange(dateRange); // Update the date range state
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-
-    // Perform validation
-    if (!formData.username || !formData.email || !formData.password) {
-      setError('Username, email, and password are required.');
-      return;
-    }
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, formData, {
@@ -65,59 +77,36 @@ const ParkingForm = () => {
     }
   };
 
-  const languageOptions = [
-    { value: 'it', label: 'Italian' },
-    { value: 'eng', label: 'English' },
-  ];
+  const serviceOptions = services.map(service => ({
+    value: service.service,
+    label: `${service.service} - $${service.price}`,
+  }));
 
   return (
     <Container className="login-container px-0" fluid>
-      {/* <div className="d-flex justify-content-center align-items-center">
-        <Logo />
-      </div> */}
-      {/* <h2 className='text-center mb-80 mt-80'>Welcome to Car Parking App</h2> */}
       <div className="formDiv">
-        <Form onSubmit={handleSubmit}>
+        <Form>
           <FormGroup>
-            <Select 
-            options={languageOptions}
-            isMulti
+            <Select
+              options={serviceOptions}
+              isMulti
+              placeholder="Select services"
+              onChange={handleServiceChange}
             />
-
-            {/* <Input
-              type="text"
-              name="username"
-              id="username"
-              placeholder="Please enter your username"
-              className='field-val mb-40'
-              value={formData.username}
-              onChange={handleChange}
-              /> */}
           </FormGroup>
           <FormGroup>
             <Input
-              type="email"
-              name="email"
-              id="email"
+              type="text"
+              name="carNumber"
+              id="carNumber"
               placeholder="Please enter car number (optional)"
               className='field-val mb-40'
-              value={formData.email}
+              value={formData.carNumber}
               onChange={handleChange}
-              />
+            />
           </FormGroup>
-
           <FormGroup>
-
-            <DateRangePicker />
-            {/* <Input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Please enter your password"
-              className='field-val mb-40'
-              value={formData.password}
-              onChange={handleChange}
-              /> */}
+            <DateTimePicker onChange={handleDateRangeChange} />
           </FormGroup>
           <FormGroup>
             <Input
@@ -128,18 +117,12 @@ const ParkingForm = () => {
               className='field-val mb-40'
               value={formData.mobile}
               onChange={handleChange}
-              />
+            />
           </FormGroup>
           {error && <Alert color="danger">{error}</Alert>}
-          <Button type="submit" className='back-color text-bold w-100 p-2 f-20'>Signup</Button>
+          <Payment formData={formData} dateTimeRange={dateRange} isFormValid={isFormValid} />
         </Form>
       </div>
-      <p className="text-center mb-80 mt-80 f-20">
-        Do you already have an account?{" "}
-        <Link to="/login" className='text-color'>
-          Login here
-        </Link>
-      </p>
     </Container>
   );
 };

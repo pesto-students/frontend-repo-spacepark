@@ -1,7 +1,7 @@
 import React from 'react';
 
-function MenuComponent({ activeIndex, changeMenuIndex }) {
-  const options = ['Users', 'Tickets', 'Transactions List', 'Total Revenue', 'Parking Space Owners', 'Parking Spaces', 'Services List'];
+function MenuComponent({ activeIndex, changeMenuIndex, options }) {
+  // const options = ;
 
   return (
     <>

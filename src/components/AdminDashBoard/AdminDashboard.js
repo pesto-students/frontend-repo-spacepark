@@ -40,7 +40,7 @@ function AdminDashboard() {
       <h3 className='mt-4 text-center mb-80' >Welcome to admin dashboard</h3>
       <Row className='mx-0 px-0'>
         <Col className='' style={{cursor:'pointer'}}>
-          <MenuComponent activeIndex={activeIndex} changeMenuIndex={setActiveIndex} />
+          <MenuComponent activeIndex={activeIndex} changeMenuIndex={setActiveIndex} options={['Users', 'Tickets', 'Transactions List', 'Total Revenue', 'Parking Space Owners', 'Parking Spaces', 'Services List']}/>
         </Col>
         <Col className='col-9'>
           {renderContent()}
