@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Navbar,
   Nav,
@@ -13,9 +13,15 @@ import './Header.scss';
 import { Link } from 'react-router-dom';
 import LogoIcon from '../../assets/logo.svg';
 import CrossIcon from '../../assets/cross.svg';
+// import store from 'store'
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  // const role = store.get('role') || '';
+
+  useEffect(()=>{
+
+  },[]);
   const [sideNavOpen, setSideNavOpen] = useState(false);
 
   const toggleNavbar = () => setIsOpen(!isOpen);

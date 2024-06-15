@@ -1,6 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
+import { Button } from 'reactstrap';
+import { time } from '../atom';
+import { activeSpace } from '../atom';
+import { parkingSpacesAtom } from './SearchComponent';
+import { useAtom } from 'jotai';
 
-function Payment() {
+
+function Payment({ formData, dateTimeRange, isSuccess, isFormValid }) {
+
+  const parkingSpaces = useAtom(parkingSpacesAtom);
+  const activeSpaces = useAtom(activeSpace);
+  const timeS = useAtom(time);
+
+  const [data, setData] = useState({});
   const handlePayment = async () => {
     try {
       const response = await fetch('http://localhost:8000/api/payment/create-order', {
@@ -21,19 +33,14 @@ function Payment() {
       }
 
       const orderData = await response.json();
-
+      console.log(orderData, 'Data');
       const options = {
         key: 'rzp_test_Iq1MeTmgm2QwEg',
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: 'Your Company Name',
-        description: 'Test Transaction',
-        order_id: orderData.id,
-        prefill: {
-          name: 'Gaurav Kumar',
-          email: 'gaurav.kumar@example.com',
-          contact: '7887615719',
-        },
+        amount: orderData.price,
+        currency: "INR",
+        name: 'Spacepark',
+        description: 'Booking Transaction',
+        order_id: orderData.orderID,
         notes: {
           address: 'Razorpay Corporate Office',
         },
@@ -41,17 +48,21 @@ function Payment() {
           color: '#3399cc',
         },
         modal: {
-          ondismiss: function () {
-            alert('Payment process was cancelled');
-          }
+          ondismiss: () => alert('Payment process was cancelled')
+        },
+        handler: function (response) {
+          // Handle successful payment here
+          // isSuccess(true);
+          updatePayment(response, orderData.orderID, 'success');
+          createTicket(formData, dateTimeRange); // Call the createTicket function
         }
       };
 
       const rzp1 = new window.Razorpay(options);
       rzp1.on('payment.failed', function (response) {
         console.error('Payment failed', response);
-        alert('Payment failed. Reason: ' + response.error.description);
-        logFailedPayment(response, orderData.id);
+        // setError(true);
+        logFailedPayment(response, orderData.orderID, 'failure');
       });
       rzp1.open();
     } catch (error) {
@@ -60,33 +71,27 @@ function Payment() {
     }
   };
 
-  // const verifyPayment = async (response) => {
-  //   try {
-  //     const res = await fetch('http://localhost:8000/api/payment/pay/verify-payment', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         razorpay_order_id: response.razorpay_order_id,
-  //         razorpay_payment_id: response.razorpay_payment_id,
-  //         razorpay_signature: response.razorpay_signature,
-  //       })
-  //     });
+  const updatePayment = async (response, orderId, status) => {
+    try {
+      const data = await fetch('http://localhost:8000/api/payment/verify-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderID: orderId,
+          status: status,
+          response: response,
+        })
+      });
+      setData(data);
+    } catch (error) {
+      console.error('Error logging payment:', error);
+      alert('Error logging payment');
+    }
+  };
 
-  //     const data = await res.json();
-  //     if (data.success) {
-  //       alert('Payment verification successful');
-  //     } else {
-  //       alert('Payment verification failed');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error verifying payment:', error);
-  //     alert('Error verifying payment');
-  //   }
-  // };
-
-  const logFailedPayment = async (response, orderId) => {
+  const logFailedPayment = async (response, orderId, status) => {
     try {
       await fetch('http://localhost:8000/api/payment/log-failed-payment', {
         method: 'POST',
@@ -95,18 +100,49 @@ function Payment() {
         },
         body: JSON.stringify({
           orderId: orderId,
-          error: response.error,
+          status: status,
+          response: response,
         })
       });
     } catch (error) {
-      console.error('Error logging failed payment:', error);
-      alert('Error logging failed payment');
+      console.error('Error logging payment:', error);
+      alert('Error logging payment');
+    }
+  };
+
+  const createTicket = async (formData, dateTimeRange) => {
+    console.log(data, 'Data', formData, dateTimeRange, activeSpaces, parkingSpaces, timeS);
+    try {
+      await fetch('http://localhost:8000/api/tickets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          userId: data.userId,
+          paymentId:data.data.id,
+        
+          status:'booked',
+          parkingSpaceId: activeSpace,
+          dateRange: dateTimeRange,
+        })
+      });
+    } catch (error) {
+      console.error('Error creating ticket:', error);
+      alert('Error creating ticket');
     }
   };
 
   return (
     <div>
-      <button onClick={handlePayment}>Pay with Razorpay</button>
+      <Button 
+        onClick={handlePayment} 
+        className='back-color text-bold w-100 p-2 f-20'
+        disabled={!isFormValid} // Disable the button if the form is not valid
+      >
+        Proceed to payment
+      </Button>
     </div>
   );
 }

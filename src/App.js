@@ -11,7 +11,11 @@ import MapComponent from "./components/MapComponent.js";
 import RegisterParkingSpace from "./components/RegisterParkingSpace/RegisterParkingSpace.jsx";
 import TicketScreen from "./components/TicketsScreen/TicketScreen.jsx";
 import AdminDashboard from "./components/AdminDashBoard/AdminDashboard.js";
-import Contact from "./components/Contact/Contact.jsx";
+import ParkAdmin from "./components/ParkAdmin/ParkAdmin.jsx";
+import UserFormComponent from "./components/AdminDashBoard/FormComponents/UserFormComponent.jsx";
+import ParkingSpacesForm from "./components/AdminDashBoard/FormComponents/ParkingSpacesForm.js";
+import AboutPage from "./components/StaticComponents/AboutUs.jsx";
+import BlogPage from "./components/StaticComponents/BlogPage.jsx";
 
 
 function App() {
@@ -38,15 +42,37 @@ function App() {
             path="/tickets"
             element={isAuthenticated() ? <TicketScreen /> : <Navigate to="/login" />}
           />
+                    <Route
+            path="/parkingOwner"
+            element={isAuthenticated() ? <ParkAdmin /> : <Navigate to="/login" />}
+          />
+          
           <Route
             path="/admindashboard"
             element={isAuthenticated() ? <AdminDashboard /> : <Navigate to="/login" />}
           />
+
+<Route
+            path="/users/:id"
+            element={isAuthenticated() ? <UserFormComponent /> : <Navigate to="/login" />}
+          />
+
+
+<Route
+            path="/parkingspaces/:id"
+            element={isAuthenticated() ? <ParkingSpacesForm /> : <Navigate to="/login" />}
+          />
           <Route
-            path="/contact"
-            element={isAuthenticated() ? <Contact /> : <Navigate to="/login" />}
+            path="/about"
+            element={isAuthenticated() ? <AboutPage /> : <Navigate to="/login" />}
+          />
+
+<Route
+            path="/blog"
+            element={isAuthenticated() ? <BlogPage /> : <Navigate to="/login" />}
           />
         </Routes>
+        
       </Router>
     </>
   );

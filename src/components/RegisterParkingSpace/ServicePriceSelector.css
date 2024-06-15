@@ -1,0 +1,33 @@
+.service-price-selector {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  }
+  
+  .service-price-input {
+    display: flex !important;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 35px;
+    padding-left: 7px;
+    }
+    
+    .padding-input{
+      padding: 5px 10px ;
+      border-top: none !important;
+      border-left: none !important;
+      border-right: none !important;
+      border-bottom: 1px solid gray !important;
+
+    }
+  .service-price-input label {
+    margin-right: 10px;
+  }
+  
+  .css-13cymwt-control{
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid gray !important;
+  }
+
