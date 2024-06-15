@@ -14,6 +14,8 @@ import AdminDashboard from "./components/AdminDashBoard/AdminDashboard.js";
 import ParkAdmin from "./components/ParkAdmin/ParkAdmin.jsx";
 import UserFormComponent from "./components/AdminDashBoard/FormComponents/UserFormComponent.jsx";
 import ParkingSpacesForm from "./components/AdminDashBoard/FormComponents/ParkingSpacesForm.js";
+import AboutPage from "./components/StaticComponents/AboutUs.jsx";
+import BlogPage from "./components/StaticComponents/BlogPage.jsx";
 
 
 function App() {
@@ -60,7 +62,17 @@ function App() {
             path="/parkingspaces/:id"
             element={isAuthenticated() ? <ParkingSpacesForm /> : <Navigate to="/login" />}
           />
+          <Route
+            path="/about"
+            element={isAuthenticated() ? <AboutPage /> : <Navigate to="/login" />}
+          />
+
+<Route
+            path="/blog"
+            element={isAuthenticated() ? <BlogPage /> : <Navigate to="/login" />}
+          />
         </Routes>
+        
       </Router>
     </>
   );
