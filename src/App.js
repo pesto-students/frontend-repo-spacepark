@@ -11,6 +11,7 @@ import MapComponent from "./components/MapComponent.js";
 import RegisterParkingSpace from "./components/RegisterParkingSpace/RegisterParkingSpace.jsx";
 import TicketScreen from "./components/TicketsScreen/TicketScreen.jsx";
 import AdminDashboard from "./components/AdminDashBoard/AdminDashboard.js";
+import Contact from "./components/Contact/Contact.jsx";
 
 
 function App() {
@@ -40,6 +41,10 @@ function App() {
           <Route
             path="/admindashboard"
             element={isAuthenticated() ? <AdminDashboard /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/contact"
+            element={isAuthenticated() ? <Contact /> : <Navigate to="/login" />}
           />
         </Routes>
       </Router>
