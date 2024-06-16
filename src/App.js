@@ -17,6 +17,7 @@ import ParkingSpacesForm from "./components/AdminDashBoard/FormComponents/Parkin
 import AboutPage from "./components/StaticComponents/AboutUs.jsx";
 import BlogPage from "./components/StaticComponents/BlogPage.jsx";
 import Contact from "./components/Contact/Contact.jsx";
+import Profile from "./components/Profile/Profile.jsx"
 
 
 function App() {
@@ -76,6 +77,11 @@ function App() {
         <Route
             path="/contact"
             element={isAuthenticated() ? <Contact /> : <Navigate to="/login" />}
+          />
+
+        <Route
+            path="/profile"
+            element={<Profile />}
           />
         </Routes>
         
