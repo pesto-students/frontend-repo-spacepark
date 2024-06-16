@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Loader from "./FramerMotion";
 import "./QRCodeDisplay.scss";
 
 const QRCodeDisplay = ({ userId }) => {
@@ -23,7 +24,8 @@ const QRCodeDisplay = ({ userId }) => {
       {qrCodeUrl ? (
         <img src={qrCodeUrl} alt="QR Code" />
       ) : (
-        <p>Loading QR Code...</p>
+        <Loader />
+        // <p>Loading QR Code...</p>
       )}
     </div>
   );
