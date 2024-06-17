@@ -32,7 +32,8 @@ const Login = () => {
         },
       });
 
-      if (response.status === 200) {
+      if (response && response.status === 200) {
+        console.log('!!!!!!!!!!!!!!!!!!', response.data);
         const { token } = response.data;
         store.set("token", token);
         navigate('/settings');

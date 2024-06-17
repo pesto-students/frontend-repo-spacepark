@@ -113,7 +113,7 @@ function Payment({ formData, dateTimeRange, isSuccess, isFormValid }) {
   const createTicket = async (formData, dateTimeRange) => {
     console.log(data, 'Data', formData, dateTimeRange, activeSpaces, parkingSpaces, timeS);
     try {
-      await fetch('http://localhost:8000/api/tickets', {
+      await fetch(`${process.env.REACT_APP_API_URL}api/tickets`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
