@@ -97,7 +97,7 @@ const UserFormComponent = () => {
       return;
     }
     try {
-      const response = await axios.patch(`${process.env.REACT_APP_API_URL}/users/${id}`, formData);
+      await axios.patch(`${process.env.REACT_APP_API_URL}/users/${id}`, formData);
       navigate('/admindashboard');
       setFormData(initialFormData);
     } catch (error) {

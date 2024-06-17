@@ -86,7 +86,7 @@ const ParkingSpacesForm = () => {
       return;
     }
     try {
-      const response = id ? await axios.put(`${process.env.REACT_APP_API_URL}/api/parkingSpaces/${id}`, formData) : await axios.post(`${process.env.REACT_APP_API_URL}/api/parkingSpaces/`, formData) ;
+      id ? await axios.put(`${process.env.REACT_APP_API_URL}/api/parkingSpaces/${id}`, formData) : await axios.post(`${process.env.REACT_APP_API_URL}/api/parkingSpaces/`, formData) ;
       id ? navigate('/admindashboard') : navigate('parkadmin');
       setFormData(initialFormData);
     } catch (error) {

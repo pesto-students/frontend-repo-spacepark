@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { Form, Container, FormGroup, Input, Alert } from 'reactstrap';
-import axios from 'axios';
-import store from 'store';
 import Select from 'react-select';
 import DateTimePicker from './DatePicker';
 import Payment from '../Payment';
 import { atom, useAtom } from 'jotai';
-import { serviceAtom, successResponseAtom } from '../../atom';
+import { serviceAtom } from '../../atom';
 
 export const formDataAtom = atom({
   carNumber: '',
@@ -16,8 +14,7 @@ export const formDataAtom = atom({
 });
 
 const ParkingForm = () => {
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [error] = useState(null);
   const [services] = useAtom(serviceAtom); // Use serviceAtom
   const [formData, setFormData] = useAtom(formDataAtom); // Use formDataAtom
   const [dateRange, setDateRange] = useState(null); // Separate state for date range
@@ -52,30 +49,30 @@ const ParkingForm = () => {
     setDateRange(dateRange); // Update the date range state
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setError(null);
 
-    try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  //   try {
+  //     const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, formData, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
 
-      if (response.status === 201) {
-        const { token, user } = response.data;
-        store.set('role', user.role);
-        store.set("token", token);
+  //     if (response.status === 201) {
+  //       const { token, user } = response.data;
+  //       store.set('role', user.role);
+  //       store.set("token", token);
 
-        navigate('/settings');
-      } else {
-        setError(response.data.message);
-      }
-    } catch (err) {
-      setError(err.response ? err.response.data.message : 'Something went wrong. Please try again later.');
-    }
-  };
+  //       navigate('/settings');
+  //     } else {
+  //       setError(response.data.message);
+  //     }
+  //   } catch (err) {
+  //     setError(err.response ? err.response.data.message : 'Something went wrong. Please try again later.');
+  //   }
+  // };
 
   const serviceOptions = services.map(service => ({
     value: service.service,
