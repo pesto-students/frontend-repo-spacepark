@@ -1,8 +1,11 @@
 // auth.js
 const isAuthenticated = () => {
-  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', localStorage.getItem('token') !== null);
-    return localStorage.getItem('token') !== null;
-  };
-  
-  export default isAuthenticated;
-  
+  const role = localStorage.getItem('role');
+  return role !== null && role !== undefined;
+};
+
+export const getUserRole = () => {
+  return localStorage.getItem('role');
+};
+
+export default isAuthenticated;
