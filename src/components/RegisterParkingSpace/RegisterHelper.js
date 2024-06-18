@@ -18,7 +18,7 @@ export const CreatingParkingSpaceOwner = async (data) => {
   export const CreateService = async (data) => {
     try {
     //   const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users?action=creatingParkUser`);
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/services/`, data, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}api/services/`, data, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -34,7 +34,7 @@ export const CreatingParkingSpaceOwner = async (data) => {
   export const ParkingSapceCreation = async (data) => {
     try {
     //   const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users?action=creatingParkUser`);
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/parkingSpaces/`, data, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}api/parkingSpaces/`, data, {
         headers: {
           'Content-Type': 'application/json',
         },

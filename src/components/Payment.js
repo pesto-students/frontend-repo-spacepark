@@ -19,7 +19,7 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
   const handlePayment = async () => {
     const serviceId = parkingSpaces[0].filter(elem => elem.id === activeSpaces[0])[0].serviceId;
 
-    const response = serviceId && await axios.get(`${process.env.REACT_APP_API_URL}/api/services/${serviceId}`);
+    const response = serviceId && await axios.get(`${process.env.REACT_APP_API_URL}api/services/${serviceId}`);
     const sumOfPrices = formData && formData.services.reduce((total, service) => {
       const matchingService = response && response.data.services.find(detail => detail.service === service);
       return matchingService ? total + parseFloat(matchingService.price) : total;
@@ -27,7 +27,7 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
     sumOfPrices && setPrice(sumOfPrices);
     
     try {
-      const response = sumOfPrices && await fetch(`${process.env.REACT_APP_API_URL}/api/payment/create-order`, {
+      const response = sumOfPrices && await fetch(`${process.env.REACT_APP_API_URL}api/payment/create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
 
   const updatePayment = async (response, orderId, status) => {
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/payment/verify-payment`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}api/payment/verify-payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
 
   const logFailedPayment = async (response, orderId, status) => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/api/payment/log-failed-payment`, {
+      await fetch(`${process.env.REACT_APP_API_URL}api/payment/log-failed-payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
 
   const createTicket = async (response, price, formData, dateTimeRange, serviceId, userId) => {
     try {
-      const res = data && await fetch(`${process.env.REACT_APP_API_URL}/api/tickets`, {
+      const res = data && await fetch(`${process.env.REACT_APP_API_URL}api/tickets`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

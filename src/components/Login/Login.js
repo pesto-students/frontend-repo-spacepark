@@ -26,7 +26,7 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/login`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}api/login`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },

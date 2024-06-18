@@ -33,7 +33,7 @@ const SearchComponent = () => {
     console.log(parkingSpace, 'Parking Space');
     setSelectedParkingSpace(parkingSpace);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/services/${parkingSpace.serviceId}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}api/services/${parkingSpace.serviceId}`);
       console.log('Mapping table response:', response.data);
       setServices(response.data.services);
     } catch (error) {
@@ -64,7 +64,7 @@ const SearchComponent = () => {
           const { lat, lon, display_name } = results[0];
           setLocation({ placeName: display_name, lat: parseFloat(lat), lng: parseFloat(lon) });
 
-          const apiResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/parkingSpaces?location=${searchText}`, { lat, lon });
+          const apiResponse = await axios.get(`${process.env.REACT_APP_API_URL}api/parkingSpaces?location=${searchText}`, { lat, lon });
           console.log(apiResponse.data);
           setParkingSpaces(apiResponse.data);
         } else {

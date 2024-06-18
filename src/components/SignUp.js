@@ -32,7 +32,7 @@ const SignUp = () => {
     }
   
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}users`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },

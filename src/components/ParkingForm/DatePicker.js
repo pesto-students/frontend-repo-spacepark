@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Input } from 'reactstrap';
 import { format } from 'date-fns';
 import { useAtom } from 'jotai';
 import { time } from '../../atom';
@@ -11,7 +10,7 @@ const DateTimePicker = ({ onChange }) => {
   const [endDate, setEndDate] = useState(null);
   const [checkInTime, setCheckInTime] = useState(null);
   const [checkOutTime, setCheckOutTime] = useState(null);
-  const [timeDuration, setTimeDuration] = useAtom(time); // Default duration of 1 hour
+  const [, setTimeDuration] = useAtom(time); // Default duration of 1 hour
 
   useEffect(() => {
     // Update the time atom whenever any value changes
