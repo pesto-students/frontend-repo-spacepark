@@ -27,6 +27,7 @@
 }
 
 .side-nav {
+    // display: none;
     height: 100%;
     width: 0;
     position: fixed;
@@ -40,6 +41,7 @@
   
   .side-nav.open {
     width: 250px;
+    // display: block;
   }
   
   .side-nav a {

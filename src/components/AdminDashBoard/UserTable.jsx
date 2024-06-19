@@ -43,7 +43,7 @@ export default function UserTable() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getUsersData();
-      setRows(data.map(user => createData(user.id, user.username, user.email, user.mobile, user.role, user.status)));
+      data && setRows(data.map(user => createData(user.id, user.username, user.email, user.mobile, user.role, user.status)));
     };
 
     fetchData();

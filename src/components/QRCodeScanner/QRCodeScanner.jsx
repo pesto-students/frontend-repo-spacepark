@@ -11,9 +11,9 @@ const QRCodeScanner = () => {
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [IsLeaving, setIsLeaving] = useState(false);
+  const [, setIsLeaving] = useState(false);
 
-  const baseURI = process.env.REACT_APP_BASEURL;
+  const baseURI = process.env.REACT_APP_API_URL;
 
   const handleScan = async (data) => {
     if (data) {

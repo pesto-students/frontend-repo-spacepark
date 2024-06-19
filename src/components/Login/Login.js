@@ -1,9 +1,10 @@
-import React, {useState, } from 'react';
+// src/components/Login/Login.js
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {Form,Container, FormGroup, Input, Button, Alert } from 'reactstrap';
+import { Form, Container, FormGroup, Input, Button, Alert } from 'reactstrap';
 import Logo from '../Logo/Logo';
 import axios from 'axios';
-import store from 'store';
+import { useUser } from '../../context/userContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,8 @@ const Login = () => {
   });
 
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // useNavigate hook to navigate
+  const navigate = useNavigate();
+  const { setUser, setToken } = useUser();
 
   const handleChange = (e) => {
     setFormData({
@@ -24,7 +26,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-
+    console.log(formData, 'Form SDAagdbvujfb');
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}api/login`, formData, {
         headers: {
@@ -33,14 +35,18 @@ const Login = () => {
       });
 
       if (response && response.status === 200) {
-        console.log('!!!!!!!!!!!!!!!!!!', response.data);
-        const { token } = response.data;
-        store.set("token", token);
-        navigate('/settings');
+        console.log('##########################', response.data);
+        const { token, user } = response.data;
+        setToken(token);
+        setUser(user);
+        localStorage.setItem('token', token);localStorage.setItem('role', user.role);
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/bookings');
       } else {
         setError(response.data.message);
       }
     } catch (err) {
+      console.log(err, 'Error ');
       setError(err.response ? err.response.data.message : 'Something went wrong. Please try again later.');
     }
   };
@@ -52,9 +58,9 @@ const Login = () => {
       </div>
       <h2 className='text-center mb-80 mt-80'>Welcome to Car Parking App</h2>
       <div className="formDiv">
-            <Form onSubmit={handleSubmit}>
-              <FormGroup>
-              <Input
+        <Form onSubmit={handleSubmit}>
+          <FormGroup>
+            <Input
               type="text"
               name="username"
               id="username"
@@ -64,9 +70,9 @@ const Login = () => {
               onChange={handleChange}
               required
             />
-              </FormGroup>
-              <FormGroup>
-              <Input
+          </FormGroup>
+          <FormGroup>
+            <Input
               type="password"
               name="password"
               id="password"
@@ -76,10 +82,10 @@ const Login = () => {
               onChange={handleChange}
               required
             />
-              </FormGroup>
-              {error && <Alert color="danger">{error}</Alert>}
-              <Button type="submit" className='back-color text-bold w-100 p-2 f-20'>Login</Button>
-            </Form>
+          </FormGroup>
+          {error && <Alert color="danger">{error}</Alert>}
+          <Button type="submit" className='back-color text-bold w-100 p-2 f-20'>Login</Button>
+        </Form>
       </div>
       <p className='text-center mt-80 mb-80 f-20'>
         or <Link to="/signup" className='text-color'>Signup</Link>

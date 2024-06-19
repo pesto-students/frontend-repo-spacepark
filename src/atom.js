@@ -11,3 +11,6 @@ export const successResponseAtom = atom(false);
 export const activeSpace = atom(null);
 export const activeParkingSpace = atom({});
 export const time = atom(1);
+export const tokenAtom = atom(null);
+export const userAtom = atom(localStorage.getItem('user') || null);
+

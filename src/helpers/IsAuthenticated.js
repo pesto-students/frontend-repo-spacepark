@@ -1,4 +1,4 @@
-// auth.js
+// src/auth.js
 const isAuthenticated = () => {
   const role = localStorage.getItem("role");
   return role !== null && role !== undefined;

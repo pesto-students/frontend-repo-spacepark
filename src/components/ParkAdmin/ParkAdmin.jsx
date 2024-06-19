@@ -5,6 +5,7 @@ import MenuComponent from '../../components/AdminDashBoard/Menu';
 import { Row, Col } from 'reactstrap';
 import { menuIndexState } from '../../atom';
 import ParkingSpacesForm from '../AdminDashBoard/FormComponents/ParkingSpacesForm';
+import QRCodeScanner from '../QRCodeScanner/QRCodeScanner';
 
 function ParkAdmin() {
   const [activeIndex, setActiveIndex] = useAtom(menuIndexState);
@@ -15,12 +16,14 @@ function ParkAdmin() {
 
   const renderContent = () => {
     switch (activeIndex) {
-      case 0:
-        return <ParkingSpacesTable />;
       case 1:
-        return <ParkingSpacesForm />;
-      default:
         return <ParkingSpacesTable />;
+      case 0:
+        return <ParkingSpacesForm />;
+        case 2:
+          return <QRCodeScanner />;
+      default:
+        return <></>;
     }
   };
 
@@ -32,7 +35,7 @@ function ParkAdmin() {
           <MenuComponent
             activeIndex={activeIndex}
             changeMenuIndex={setActiveIndex}
-            options={['Add Parking Space', 'Parking Spaces List']}
+            options={['Add Parking Space', 'Parking Spaces List', "Scan QR Code"]}
           />
         </Col>
         <Col className='col-9'>

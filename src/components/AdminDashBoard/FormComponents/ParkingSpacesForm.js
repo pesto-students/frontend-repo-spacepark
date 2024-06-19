@@ -182,7 +182,7 @@ const ParkingSpacesForm = () => {
           />
           {errors.noOfSpaces && <FormFeedback>{errors.noOfSpaces}</FormFeedback>}
         </FormGroup>
-        <Button type="submit" className='w-100 mb-4 fs-20'>Update</Button>
+        <Button type="submit" className='w-100 mb-4 fs-20'>Create</Button>
       </Form>
     </>
   );

@@ -1,3 +1,4 @@
+// src/components/Header.js
 import React, { useEffect, useState } from 'react';
 import {
   Navbar,
@@ -13,25 +14,17 @@ import './Header.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoIcon from '../../assets/logo.svg';
 import CrossIcon from '../../assets/cross.svg';
+import { useUser } from '../../context/userContext';
 
-const Header = ({authenticated}) => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [sideNavOpen, setSideNavOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [role, setRole] = useState('');
+  const { user, setUser } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userRole = localStorage.getItem('role');
-    if (token && userRole) {
-      setIsAuthenticated(true);
-      setRole(userRole);
-    } else {
-      setIsAuthenticated(false);
-      setRole('');
-    }
-  }, []);
+    // Update state based on user context
+  }, [user]);
 
   const toggleNavbar = () => setIsOpen(!isOpen);
   const toggleSideNav = () => setSideNavOpen(!sideNavOpen);
@@ -48,10 +41,13 @@ const Header = ({authenticated}) => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('user');
-    setIsAuthenticated(false);
-    setRole('');
+    setUser(null);
     navigate('/login');
   };
+
+  const isAuthenticated = user !== null;
+  const role = user?.role || localStorage.getItem('role');
+  console.log(role, 'role');
 
   return (
     <>
@@ -64,17 +60,33 @@ const Header = ({authenticated}) => {
         </NavbarToggler>
         <Collapse isOpen={isOpen} navbar className="justify-content-end">
           <Nav navbar className='align-items-center'>
-            <NavItem>
+           { !isAuthenticated ? 
+           
+           <>
+           <NavItem>
               <Link to="/blog">Blog</Link>
-            </NavItem>
+            </NavItem> 
             <NavItem>
               <Link to="/about">About us</Link>
             </NavItem>
+           </>
+            
+            : 
+            <NavItem>
+            <Link to="/tickets">Tickets</Link>
+          </NavItem>
+            }
             <NavItem>
               <Link to="/contact">Contact</Link>
             </NavItem>
-            {authenticated ? (
+            {isAuthenticated ? (
               <>
+                <NavItem>
+                <Link to="/bookings">Booking</Link>
+                </NavItem>
+                <NavItem>
+                <Link to="/profile">Profile</Link>
+                </NavItem>
                 <NavItem>
                   <Button className="ml-2 custom-btn" onClick={handleLogout}>Logout</Button>
                 </NavItem>
@@ -104,7 +116,7 @@ const Header = ({authenticated}) => {
         </Collapse>
       </Navbar>
 
-      <div className={`side-nav p-2 ${sideNavOpen ? 'open' : ''}`}>
+      <div className={`side-nav ${sideNavOpen ? 'open' : ''}`}>
         <div className="side-nav-header">
           <img src={CrossIcon} alt="close" onClick={toggleSideNav} className="close-icon" />
         </div>

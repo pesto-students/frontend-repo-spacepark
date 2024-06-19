@@ -58,7 +58,7 @@ const MapComponent = () => {
             </Col>
           </Row>
         </Col>
-        <Col md={6}>
+        <Col md={6} className="px-0 mx-0">
           <MapContainer
             center={[28.6139, 77.209]}
             zoom={5}

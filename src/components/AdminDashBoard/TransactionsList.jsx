@@ -39,7 +39,7 @@ export default function TransactionsList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/payment/listpayment`); // Replace with your API endpoint
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}api/payment/listpayment`); // Replace with your API endpoint
         const data = response.data;
         setRows(data.map((transaction) => createData(transaction.id, transaction.userId, transaction.orderID, transaction.price, transaction.status)));
       } catch (error) {
