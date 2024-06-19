@@ -17,7 +17,7 @@ import ParkingSpacesForm from "./components/AdminDashBoard/FormComponents/Parkin
 import AboutPage from "./components/StaticComponents/AboutUs.jsx";
 import BlogPage from "./components/StaticComponents/BlogPage.jsx";
 import Contact from "./components/Contact/Contact.jsx";
-import Profile from "./components/Profile/Profile.jsx"
+import Profile from "./components/Profile/Profile.jsx";
 import QRCodeDisplay from "./components/QRCodeDisplay/QRCodeDisplay.jsx";
 import QRCodeScanner from "./components/QRCodeScanner/QRCodeScanner.jsx";
 
@@ -34,58 +34,77 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/registerspace" element={<RegisterParkingSpace />} />
           <Route
-          path="/settings"
-          element={
-            isAuthenticated() ? (
-              <MapComponent />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+            path="/settings"
+            element={
+              isAuthenticated() ? (
+                <MapComponent />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
           <Route
             path="/tickets"
-            element={isAuthenticated() ? <TicketScreen /> : <Navigate to="/login" />}
+            element={
+              isAuthenticated() ? <TicketScreen /> : <Navigate to="/login" />
+            }
           />
-                    <Route
+          <Route
             path="/parkingOwner"
-            element={isAuthenticated() ? <ParkAdmin /> : <Navigate to="/login" />}
+            element={
+              isAuthenticated() ? <ParkAdmin /> : <Navigate to="/login" />
+            }
           />
-          
+
           <Route
             path="/admindashboard"
-            element={isAuthenticated() ? <AdminDashboard /> : <Navigate to="/login" />}
+            element={
+              isAuthenticated() ? <AdminDashboard /> : <Navigate to="/login" />
+            }
           />
 
-<Route
+          <Route
             path="/users/:id"
-            element={isAuthenticated() ? <UserFormComponent /> : <Navigate to="/login" />}
+            element={
+              isAuthenticated() ? (
+                <UserFormComponent />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
-
-<Route
+          <Route
             path="/parkingspaces/:id"
-            element={isAuthenticated() ? <ParkingSpacesForm /> : <Navigate to="/login" />}
+            element={
+              isAuthenticated() ? (
+                <ParkingSpacesForm />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
           <Route
             path="/about"
-            element={isAuthenticated() ? <AboutPage /> : <Navigate to="/login" />}
+            element={
+              isAuthenticated() ? <AboutPage /> : <Navigate to="/login" />
+            }
           />
 
-<Route
+          <Route
             path="/blog"
-            element={isAuthenticated() ? <BlogPage /> : <Navigate to="/login" />}
+            element={
+              isAuthenticated() ? <BlogPage /> : <Navigate to="/login" />
+            }
           />
 
-        <Route
+          <Route
             path="/contact"
-            element={isAuthenticated() ? <Contact /> : <Navigate to="/login" />}
+            element={<Contact />}
+            // element={isAuthenticated() ? <Contact /> : <Navigate to="/login" />}
           />
 
-        <Route
-            path="/profile"
-            element={<Profile />}
-          />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>
     </>

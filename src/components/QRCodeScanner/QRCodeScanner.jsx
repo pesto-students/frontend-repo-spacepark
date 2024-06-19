@@ -13,6 +13,8 @@ const QRCodeScanner = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [, setIsLeaving] = useState(false);
 
+  const baseURI = process.env.REACT_APP_BASEURL;
+
   const handleScan = async (data) => {
     if (data) {
       setLoading(true);
@@ -20,7 +22,9 @@ const QRCodeScanner = () => {
       setModalIsOpen(true);
 
       try {
-        const response = await axios.get(`/api/tickets/active/${scannedData}`);
+        const response = await axios.get(
+          `${baseURI}/api/tickets/active/${scannedData}`
+        );
         setTickets(response.data);
       } catch (error) {
         console.error("Error fetching ticket data:", error);
