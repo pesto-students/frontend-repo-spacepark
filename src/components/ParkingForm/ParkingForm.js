@@ -49,31 +49,6 @@ const ParkingForm = () => {
     setDateRange(dateRange); // Update the date range state
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError(null);
-
-  //   try {
-  //     const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, formData, {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-
-  //     if (response.status === 201) {
-  //       const { token, user } = response.data;
-  //       store.set('role', user.role);
-  //       store.set("token", token);
-
-  //       navigate('/settings');
-  //     } else {
-  //       setError(response.data.message);
-  //     }
-  //   } catch (err) {
-  //     setError(err.response ? err.response.data.message : 'Something went wrong. Please try again later.');
-  //   }
-  // };
-
   const serviceOptions = services.map(service => ({
     value: service.service,
     label: `${service.service} - $${service.price}`,

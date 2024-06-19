@@ -10,19 +10,28 @@ import {
   ListGroupItem
 } from 'reactstrap';
 import './Header.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LogoIcon from '../../assets/logo.svg';
 import CrossIcon from '../../assets/cross.svg';
-// import store from 'store'
 
-const Header = () => {
+const Header = ({authenticated}) => {
   const [isOpen, setIsOpen] = useState(false);
-  // const role = store.get('role') || '';
-
-  useEffect(()=>{
-
-  },[]);
   const [sideNavOpen, setSideNavOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [role, setRole] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userRole = localStorage.getItem('role');
+    if (token && userRole) {
+      setIsAuthenticated(true);
+      setRole(userRole);
+    } else {
+      setIsAuthenticated(false);
+      setRole('');
+    }
+  }, []);
 
   const toggleNavbar = () => setIsOpen(!isOpen);
   const toggleSideNav = () => setSideNavOpen(!sideNavOpen);
@@ -35,10 +44,21 @@ const Header = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('user');
+    setIsAuthenticated(false);
+    setRole('');
+    navigate('/login');
+  };
+
   return (
     <>
       <Navbar color="fade" fade expand="md" className='header-div p-2'>
-        <Link to="/" className="navbar-brand logo-text"><img src={LogoIcon} alt='logo'/></Link>
+        <Link to="/" className="navbar-brand logo-text">
+          <img src={LogoIcon} alt='logo' />
+        </Link>
         <NavbarToggler onClick={handleTogglerClick} className='burger-icon'>
           <span className="navbar-toggler-icon"></span>
         </NavbarToggler>
@@ -53,16 +73,33 @@ const Header = () => {
             <NavItem>
               <Link to="/contact">Contact</Link>
             </NavItem>
-            <NavItem>
-              <Link to="/login">
-                <Button className="ml-2 custom-btn">Login</Button>
-              </Link>
-            </NavItem>
-            <NavItem>
-              <Link to="/signup">
-                <Button className="ml-2 custom-btn">Signup</Button>
-              </Link>
-            </NavItem>
+            {authenticated ? (
+              <>
+                <NavItem>
+                  <Button className="ml-2 custom-btn" onClick={handleLogout}>Logout</Button>
+                </NavItem>
+                {role === 'admin' && (
+                  <NavItem>
+                    <Link to="/admindashboard">
+                      <Button className="ml-2 custom-btn">Admin Dashboard</Button>
+                    </Link>
+                  </NavItem>
+                )}
+              </>
+            ) : (
+              <>
+                <NavItem>
+                  <Link to="/login">
+                    <Button className="ml-2 custom-btn">Login</Button>
+                  </Link>
+                </NavItem>
+                <NavItem>
+                  <Link to="/signup">
+                    <Button className="ml-2 custom-btn">Signup</Button>
+                  </Link>
+                </NavItem>
+              </>
+            )}
           </Nav>
         </Collapse>
       </Navbar>
@@ -81,16 +118,33 @@ const Header = () => {
           <ListGroupItem>
             <Link to="/contact" onClick={toggleSideNav}>Contact</Link>
           </ListGroupItem>
-          <ListGroupItem>
-            <Link to="/login" onClick={toggleSideNav}>
-              <Button className="mb-btn">Login</Button>
-            </Link>
-          </ListGroupItem>
-          <ListGroupItem>
-            <Link to="/signup" onClick={toggleSideNav}>
-              <Button className="mb-btn">Signup</Button>
-            </Link>
-          </ListGroupItem>
+          {isAuthenticated ? (
+            <>
+              <ListGroupItem>
+                <Button className="mb-btn" onClick={handleLogout}>Logout</Button>
+              </ListGroupItem>
+              {role === 'admin' && (
+                <ListGroupItem>
+                  <Link to="/admindashboard" onClick={toggleSideNav}>
+                    <Button className="mb-btn">Admin Dashboard</Button>
+                  </Link>
+                </ListGroupItem>
+              )}
+            </>
+          ) : (
+            <>
+              <ListGroupItem>
+                <Link to="/login" onClick={toggleSideNav}>
+                  <Button className="mb-btn">Login</Button>
+                </Link>
+              </ListGroupItem>
+              <ListGroupItem>
+                <Link to="/signup" onClick={toggleSideNav}>
+                  <Button className="mb-btn">Signup</Button>
+                </Link>
+              </ListGroupItem>
+            </>
+          )}
         </ListGroup>
       </div>
 

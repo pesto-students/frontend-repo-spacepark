@@ -100,8 +100,7 @@ function App() {
 
           <Route
             path="/contact"
-            element={<Contact />}
-            // element={isAuthenticated() ? <Contact /> : <Navigate to="/login" />}
+            element={isAuthenticated() ? <Contact /> : <Navigate to="/login" />}
           />
 
           <Route path="/profile" element={<Profile />} />

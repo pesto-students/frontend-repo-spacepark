@@ -1,30 +1,42 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Button } from 'reactstrap';
 import { time } from '../atom';
 import { activeSpace } from '../atom';
+import store from 'store';
+import axios from 'axios';
+import {useNavigate} from 'react-router-dom'
 import { parkingSpacesAtom } from './SearchComponent';
 import { useAtom } from 'jotai';
 
-
-function Payment({ formData, dateTimeRange, isSuccess, isFormValid }) {
-
+function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
   const parkingSpaces = useAtom(parkingSpacesAtom);
   const activeSpaces = useAtom(activeSpace);
   const timeS = useAtom(time);
-
+  const [, setPrice] = useState(0);
   const [data, setData] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
   const handlePayment = async () => {
+    const serviceId = parkingSpaces[0].filter(elem => elem.id === activeSpaces[0])[0].serviceId;
+
+    const response = serviceId && await axios.get(`${process.env.REACT_APP_API_URL}api/services/${serviceId}`);
+    const sumOfPrices = formData && formData.services.reduce((total, service) => {
+      const matchingService = response && response.data.services.find(detail => detail.service === service);
+      return matchingService ? total + parseFloat(matchingService.price) : total;
+    }, 0);
+    sumOfPrices && setPrice(sumOfPrices);
+    
     try {
-      const response = await fetch('http://localhost:8000/api/payment/create-order', {
+      const response = sumOfPrices && await fetch(`${process.env.REACT_APP_API_URL}api/payment/create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          amount: 5000,
+          amount: sumOfPrices * 100,
           currency: 'INR',
           receipt: 'receipt#1',
-          userId: 1,
+          userId: store.get('user').id,
         })
       });
 
@@ -33,7 +45,6 @@ function Payment({ formData, dateTimeRange, isSuccess, isFormValid }) {
       }
 
       const orderData = await response.json();
-      console.log(orderData, 'Data');
       const options = {
         key: 'rzp_test_Iq1MeTmgm2QwEg',
         amount: orderData.price,
@@ -50,18 +61,17 @@ function Payment({ formData, dateTimeRange, isSuccess, isFormValid }) {
         modal: {
           ondismiss: () => alert('Payment process was cancelled')
         },
-        handler: function (response) {
-          // Handle successful payment here
-          // isSuccess(true);
-          updatePayment(response, orderData.orderID, 'success');
-          createTicket(formData, dateTimeRange); // Call the createTicket function
-        }
+        handler: async function (response) {
+          const resp = await updatePayment(response, orderData.orderID, 'success');
+          if (resp) {
+            await createTicket(resp, sumOfPrices, formData, dateTimeRange, serviceId, orderData.userId);
+          }
+        },
       };
 
       const rzp1 = new window.Razorpay(options);
       rzp1.on('payment.failed', function (response) {
         console.error('Payment failed', response);
-        // setError(true);
         logFailedPayment(response, orderData.orderID, 'failure');
       });
       rzp1.open();
@@ -73,7 +83,7 @@ function Payment({ formData, dateTimeRange, isSuccess, isFormValid }) {
 
   const updatePayment = async (response, orderId, status) => {
     try {
-      const data = await fetch('http://localhost:8000/api/payment/verify-payment', {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}api/payment/verify-payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +94,14 @@ function Payment({ formData, dateTimeRange, isSuccess, isFormValid }) {
           response: response,
         })
       });
-      setData(data);
+
+      if (!res.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await res.json();
+      data && setData(data);
+      return data;
     } catch (error) {
       console.error('Error logging payment:', error);
       alert('Error logging payment');
@@ -93,7 +110,7 @@ function Payment({ formData, dateTimeRange, isSuccess, isFormValid }) {
 
   const logFailedPayment = async (response, orderId, status) => {
     try {
-      await fetch('http://localhost:8000/api/payment/log-failed-payment', {
+      await fetch(`${process.env.REACT_APP_API_URL}api/payment/log-failed-payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,34 +127,64 @@ function Payment({ formData, dateTimeRange, isSuccess, isFormValid }) {
     }
   };
 
-  const createTicket = async (formData, dateTimeRange) => {
-    console.log(data, 'Data', formData, dateTimeRange, activeSpaces, parkingSpaces, timeS);
+  const createTicket = async (response, price, formData, dateTimeRange, serviceId, userId) => {
     try {
-      await fetch('http://localhost:8000/api/tickets', {
+      const res = data && await fetch(`${process.env.REACT_APP_API_URL}api/tickets`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           ...formData,
-          userId: data.userId,
-          paymentId:data.data.id,
-        
-          status:'booked',
-          parkingSpaceId: activeSpace,
-          dateRange: dateTimeRange,
+          ...timeS[0],
+          serviceId,
+          price,
+          userId,
+          paymentId: response.data.id,
+          status: 'booked',
+          parkingSpaceId: activeSpaces[0],
         })
       });
+
+      if (!res.ok) {
+        throw new Error('Failed to create ticket');
+      }
+
+      setSuccessMessage('Ticket created successfully!');
+      setTimeout(() =>{
+        navigate('/tickets')
+      },3000)
+      resetForm();
     } catch (error) {
       console.error('Error creating ticket:', error);
-      alert('Error creating ticket');
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      carNumber: '',
+      checkInTime: '',
+      checkOutTime: '',
+      endDate: '',
+      mobile: '',
+      parkingSpaceId: '',
+      paymentId: '',
+      price: '',
+      serviceId: '',
+      services: [],
+      startDate: '',
+      status: '',
+      userId: '',
+    });
+    setPrice(0);
+    setData({});
   };
 
   return (
     <div>
-      <Button 
-        onClick={handlePayment} 
+      {successMessage && <div className="alert alert-success">{successMessage}</div>}
+      <Button
+        onClick={handlePayment}
         className='back-color text-bold w-100 p-2 f-20'
         disabled={!isFormValid} // Disable the button if the form is not valid
       >

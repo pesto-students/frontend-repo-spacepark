@@ -22,7 +22,7 @@ const ParkingSpacesForm = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/parkingSpaces/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}api/parkingSpaces/${id}`);
         setFormData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -86,7 +86,7 @@ const ParkingSpacesForm = () => {
       return;
     }
     try {
-      id ? await axios.put(`${process.env.REACT_APP_API_URL}/api/parkingSpaces/${id}`, formData) : await axios.post(`${process.env.REACT_APP_API_URL}/api/parkingSpaces/`, formData) ;
+      id ? await axios.put(`${process.env.REACT_APP_API_URL}api/parkingSpaces/${id}`, formData) : await axios.post(`${process.env.REACT_APP_API_URL}/api/parkingSpaces/`, formData) ;
       id ? navigate('/admindashboard') : navigate('parkadmin');
       setFormData(initialFormData);
     } catch (error) {

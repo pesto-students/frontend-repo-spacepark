@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Form, Container, FormGroup, Input, Button, Alert } from 'reactstrap';
 import axios from 'axios';
 import Logo from './Logo/Logo';
-import store from 'store'; // import the store
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -26,25 +25,25 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-
-    // Perform validation
+  
     if (!formData.username || !formData.email || !formData.password) {
       setError('Username, email, and password are required.');
       return;
     }
-
+  
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}users`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-
+  
       if (response.status === 201) {
         const { token, user } = response.data;
-        store.set('role', user.role);
-        store.set("token", token);
-
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('role', user.role);
+        localStorage.setItem('token', token);
+  
         navigate('/settings');
       } else {
         setError(response.data.message);
@@ -53,6 +52,7 @@ const SignUp = () => {
       setError(err.response ? err.response.data.message : 'Something went wrong. Please try again later.');
     }
   };
+  
 
   return (
     <Container className="login-container" fluid>

@@ -24,7 +24,7 @@ const UserFormComponent = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}users/${id}`);
         setFormData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -97,7 +97,7 @@ const UserFormComponent = () => {
       return;
     }
     try {
-      await axios.patch(`${process.env.REACT_APP_API_URL}/users/${id}`, formData);
+      await axios.patch(`${process.env.REACT_APP_API_URL}users/${id}`, formData);
       navigate('/admindashboard');
       setFormData(initialFormData);
     } catch (error) {

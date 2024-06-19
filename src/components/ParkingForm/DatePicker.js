@@ -1,37 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Input } from 'reactstrap';
 import { format } from 'date-fns';
 import { useAtom } from 'jotai';
 import { time } from '../../atom';
 
 const DateTimePicker = ({ onChange }) => {
-  const [startDateTime, setStartDateTime] = useState(null);
-  const [endDateTime, setEndDateTime] = useState(null);
-  const [timeDuration, setTimeDuration] = useAtom(time); // Default duration of 1 hour
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [checkInTime, setCheckInTime] = useState(null);
+  const [checkOutTime, setCheckOutTime] = useState(null);
+  const [, setTimeDuration] = useAtom(time); // Default duration of 1 hour
 
-  const formatDate = (date) => {
-    return date ? format(date, 'dd/MM/yyyy') : null;
+  useEffect(() => {
+    // Update the time atom whenever any value changes
+    if (startDate && endDate && checkInTime && checkOutTime) {
+      setTimeDuration({
+        startDate: formatDate(startDate),
+        endDate: formatDate(endDate),
+        checkInTime: formatTime(checkInTime),
+        checkOutTime: formatTime(checkOutTime),
+      });
+    }
+  }, [startDate, endDate, checkInTime, checkOutTime, setTimeDuration]);
+
+  const formatDate = (date) => date ? format(date, 'dd/MM/yyyy') : null;
+  const formatTime = (time) => time ? format(time, 'HH:mm') : null;
+
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
+    if (endDate && date >= endDate) {
+      setEndDate(null);
+    }
+    onChange({ startDate: formatDate(date), endDate: formatDate(endDate), checkInTime: formatTime(checkInTime), checkOutTime: formatTime(checkOutTime) });
   };
 
-  const handleStartDateTimeChange = (date) => {
-    setStartDateTime(date);
-    onChange({ startDateTime: formatDate(date), endDateTime: formatDate(endDateTime) });
-  };
-
-  const handleEndDateTimeChange = (date) => {
-    if (date >= startDateTime) {
-      setEndDateTime(date);
-      onChange({ startDateTime: formatDate(startDateTime), endDateTime: formatDate(date) });
+  const handleEndDateChange = (date) => {
+    if (date > startDate) {
+      setEndDate(date);
+      onChange({ startDate: formatDate(startDate), endDate: formatDate(date), checkInTime: formatTime(checkInTime), checkOutTime: formatTime(checkOutTime) });
     } else {
-      alert('End date must be greater than or equal to the start date.');
+      alert('End date must be greater than the start date.');
     }
   };
 
-  const handleTimeDurationChange = (e) => {
-    setTimeDuration(e.val);
-    // onChange({ startDateTime: formatDate(startDateTime), endDateTime: formatDate(endDateTime) });
+  const handleCheckInTimeChange = (time) => {
+    setCheckInTime(time);
+    onChange({ startDate: formatDate(startDate), endDate: formatDate(endDate), checkInTime: formatTime(time), checkOutTime: formatTime(checkOutTime) });
+  };
+
+  const handleCheckOutTimeChange = (time) => {
+    setCheckOutTime(time);
+    onChange({ startDate: formatDate(startDate), endDate: formatDate(endDate), checkInTime: formatTime(checkInTime), checkOutTime: formatTime(time) });
   };
 
   return (
@@ -39,10 +59,13 @@ const DateTimePicker = ({ onChange }) => {
       <div className='d-flex'>
         <div className='mr-10'>
           <DatePicker
-            selected={startDateTime}
-            onChange={handleStartDateTimeChange}
-            showTimeSelect
-            dateFormat="Pp"
+            selected={startDate}
+            onChange={handleStartDateChange}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            dateFormat="dd/MM/yyyy"
+            minDate={new Date()}
             isClearable
             className='field-val'
             placeholderText="Select start date"
@@ -50,29 +73,47 @@ const DateTimePicker = ({ onChange }) => {
         </div>
         <div>
           <DatePicker
-            selected={endDateTime}
-            onChange={handleEndDateTimeChange}
-            showTimeSelect
-            dateFormat="Pp"
-            minDate={startDateTime}
+            selected={endDate}
+            onChange={handleEndDateChange}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            dateFormat="dd/MM/yyyy"
+            minDate={startDate || new Date()}
             isClearable
             className='field-val'
             placeholderText="Select end date"
           />
         </div>
       </div>
-      {startDateTime && endDateTime && startDateTime.toDateString() === endDateTime.toDateString() && (
-        <div>
-          <label className='fs-20 my-3'>Time Duration (hours):</label>
-          <Input
-            type="number"
-            min={1}
+      <div className='d-flex mt-3'>
+        <div className='mr-10'>
+          <DatePicker
+            selected={checkInTime}
+            onChange={handleCheckInTimeChange}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={15}
+            timeCaption="Check-In Time"
+            dateFormat="HH:mm"
             className='field-val'
-            value={timeDuration}
-            onChange={handleTimeDurationChange}
+            placeholderText="Select check-in time"
           />
         </div>
-      )}
+        <div>
+          <DatePicker
+            selected={checkOutTime}
+            onChange={handleCheckOutTimeChange}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={15}
+            timeCaption="Check-Out Time"
+            dateFormat="HH:mm"
+            className='field-val'
+            placeholderText="Select check-out time"
+          />
+        </div>
+      </div>
     </div>
   );
 };

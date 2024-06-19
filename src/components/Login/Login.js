@@ -26,13 +26,14 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/login`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}api/login`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-      if (response.status === 200) {
+      if (response && response.status === 200) {
+        console.log('!!!!!!!!!!!!!!!!!!', response.data);
         const { token } = response.data;
         store.set("token", token);
         navigate('/settings');
