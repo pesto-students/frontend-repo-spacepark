@@ -116,11 +116,7 @@ const Profile = () => {
           </form>
         ) : (
           <div>
-            <img
-              src={user.profilePicture || 'default-profile.png'}
-              alt="Profile"
-              className="profile-picture"
-            />
+            
             <p>User ID: {user.id}</p>
             <p>Username: {user.username}</p>
             <p>Email: {user.email}</p>
