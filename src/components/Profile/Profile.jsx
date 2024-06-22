@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import QRCode from "qrcode.react";
 import "./Profile.scss";
-import QRCodeDisplay from "../QRCodeDisplay/QRCodeDisplay";
+// import QRCodeDisplay from "../QRCodeDisplay/QRCodeDisplay";
 
 const Profile = () => {
   const [user, setUser] = useState({});
@@ -87,7 +87,7 @@ const Profile = () => {
         )}
       </div>
       <button onClick={generateQrCode}>Generate QR Code</button>
-      <QRCodeDisplay userId={user.id} />
+      {/* <QRCodeDisplay userId={user.id} /> */}
       {qrCode && (
         <div>
           <QRCode value={qrCode} />
