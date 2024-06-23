@@ -14,7 +14,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userId = user?.id || localStorage.getItem("role");
+        const userId = user?.id;
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}users/${userId}`
         );
