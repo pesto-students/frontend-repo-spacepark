@@ -19,7 +19,7 @@ import { useUser } from '../../context/userContext';
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [sideNavOpen, setSideNavOpen] = useState(false);
-  const { user, setUser } = useUser();
+  const { user, setUser , role} = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,8 +46,8 @@ const Header = () => {
   };
 
   const isAuthenticated = user !== null;
-  const role = user?.role || localStorage.getItem('role');
-  console.log(role, 'role');
+  // const role = user?.role || localStorage.getItem('role');
+  // console.log(role, 'role');
 
   return (
     <>
@@ -72,31 +72,43 @@ const Header = () => {
            </>
             
             : 
-            <NavItem>
+           role === 'user' && <NavItem>
             <Link to="/tickets">Tickets</Link>
           </NavItem>
             }
-            <NavItem>
+           { role !== 'admin' && <NavItem>
               <Link to="/contact">Contact</Link>
-            </NavItem>
+            </NavItem>}
             {isAuthenticated ? (
               <>
+
+{role ===  'user' && (
+  <>
                 <NavItem>
                 <Link to="/bookings">Booking</Link>
                 </NavItem>
                 <NavItem>
                 <Link to="/profile">Profile</Link>
                 </NavItem>
-                <NavItem>
-                  <Button className="ml-2 custom-btn" onClick={handleLogout}>Logout</Button>
-                </NavItem>
+                </>
+                )}
                 {role === 'admin' && (
                   <NavItem>
                     <Link to="/admindashboard">
-                      <Button className="ml-2 custom-btn">Admin Dashboard</Button>
+                      Admin Dashboard
                     </Link>
                   </NavItem>
                 )}
+                 {role === 'parkAdmin' && (
+                  <NavItem>
+                    <Link to="/parkingOwner">
+                      Park Admin Dashboard
+                    </Link>
+                  </NavItem>
+                )}
+                <NavItem>
+                  <Button className="ml-2 custom-btn" onClick={handleLogout}>Logout</Button>
+                </NavItem>
               </>
             ) : (
               <>

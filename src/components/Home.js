@@ -7,9 +7,10 @@ import ArrowIcon from '../assets/arrowUp.svg';
 import ParkingSpaceIcon from '../assets/parking.svg'
 import Logo from './Logo/Logo';
 import { Container, Row, Col, Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <Container fluid className='custom-container'>
       <Row className='justify-content-center align-items-center'>
@@ -104,7 +105,7 @@ const Home = () => {
             <p className='text-center'>Ready to secure your parking space hassle-free? Sign up now to reserve your spot with ease.</p>
             <p className='text-center'>Join our community today and gain access to convenient parking solutions tailored to your needs. Experience seamless registration and start parking smarter.</p>
             <div className='d-flex  align-items-center justify-content-center'> {/* Apply text-center class here */}
-              <Button className='back-color text-bold'>You can register here</Button>
+              <Button className='back-color text-bold' onClick={() => {navigate('/registerspace')}}>You can register here</Button>
             </div>
           </div>
         </Col>

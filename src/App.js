@@ -21,9 +21,15 @@ import QRCodeDisplay from "./components/QRCodeDisplay/QRCodeDisplay";
 import QRCodeScanner from "./components/QRCodeScanner/QRCodeScanner";
 import { UserProvider, useUser } from "./context/userContext";
 
-const ProtectedRoute = ({ element, ...rest }) => {
-  const { isAuthenticated } = useUser();
-  return isAuthenticated() ? element : <Navigate to="/login" replace />;
+const ProtectedRoute = ({ element, roles = [], ...rest }) => {
+  const { isAuthenticated, role } = useUser();
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+  if (roles.length && !roles.includes(role)) {
+    return <Navigate to="/bookings" replace />;
+  }
+  return element;
 };
 
 function App() {
@@ -41,13 +47,13 @@ function App() {
             <Route path="/registerspace" element={<RegisterParkingSpace />} />
             <Route path="/bookings" element={<ProtectedRoute element={<MapComponent />} />} />
             <Route path="/tickets" element={<ProtectedRoute element={<TicketScreen />} />} />
-            <Route path="/parkingOwner" element={<ProtectedRoute element={<ParkAdmin />} />} />
-            <Route path="/admindashboard" element={<ProtectedRoute element={<AdminDashboard />} />} />
+            <Route path="/parkingOwner" element={<ProtectedRoute element={<ParkAdmin />} roles={['parkAdmin']}  />} />
+            <Route path="/admindashboard" element={<ProtectedRoute element={<AdminDashboard />} roles={['admin']} />} />
             <Route path="/users/:id" element={<ProtectedRoute element={<UserFormComponent />} />} />
             <Route path="/parkingspaces/:id" element={<ProtectedRoute element={<ParkingSpacesForm />} />} />
-            <Route path="/about" element={<ProtectedRoute element={<AboutPage />} />} />
-            <Route path="/blog" element={<ProtectedRoute element={<BlogPage />} />} />
-            <Route path="/contact" element={<ProtectedRoute element={<Contact />} />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </Router>

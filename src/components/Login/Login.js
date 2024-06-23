@@ -14,7 +14,7 @@ const Login = () => {
 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { setUser, setToken } = useUser();
+  const { setUser, setToken, setRole } = useUser();
 
   const handleChange = (e) => {
     setFormData({
@@ -35,10 +35,10 @@ const Login = () => {
       });
 
       if (response && response.status === 200) {
-        console.log('##########################', response.data);
         const { token, user } = response.data;
         setToken(token);
         setUser(user);
+        setRole(user.role);
         localStorage.setItem('token', token);localStorage.setItem('role', user.role);
         localStorage.setItem('user', JSON.stringify(user));
         navigate('/bookings');
