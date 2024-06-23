@@ -26,6 +26,7 @@ import QRCodeDisplay from "./components/QRCodeDisplay/QRCodeDisplay";
 import QRCodeScanner from "./components/QRCodeScanner/QRCodeScanner";
 import { UserProvider, useUser } from "./context/userContext";
 import ParkingOwnerScreen from "./components/QRCodeScanner/ParkingOwnerScreen";
+import Footer from "./components/Footer/Footer";
 
 const ProtectedRoute = ({ element, roles = [], ...rest }) => {
   const { isAuthenticated, role } = useUser();
@@ -55,10 +56,7 @@ function App() {
               path="/bookings"
               element={<ProtectedRoute element={<MapComponent />} />}
             />
-            <Route
-              path="/tickets"
-              element={<ProtectedRoute element={<TicketScreen />} />}
-            />
+            <Route path="/tickets" element={<TicketScreen />} />
             <Route
               path="/parkingOwner"
               element={
@@ -91,6 +89,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
+          <Footer />
         </Router>
       </UserProvider>
     </React.StrictMode>

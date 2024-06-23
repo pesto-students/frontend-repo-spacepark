@@ -36,6 +36,7 @@
   transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transitions */
   max-width: 400px; /* Maximum width for the card */
   margin: 0 auto; /* Center the card horizontally */
+  text-wrap: pretty;
 }
 
 .ticket-card h3 {
