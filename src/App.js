@@ -1,7 +1,12 @@
 // src/App.js
 import React from "react";
 import "./App.scss";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Home from "./components/Home";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login/Login";
@@ -46,13 +51,38 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registerspace" element={<RegisterParkingSpace />} />
-            <Route path="/bookings" element={<ProtectedRoute element={<MapComponent />} />} />
-            <Route path="/tickets" element={<ProtectedRoute element={<TicketScreen />} />} />
-            <Route path="/parkingOwner" element={<ProtectedRoute element={<ParkAdmin />} roles={['parkAdmin']}  />} />
-            <Route path="/admindashboard" element={<ProtectedRoute element={<AdminDashboard />} roles={['admin']} />} />
-            <Route path="/users/:id" element={<ProtectedRoute element={<UserFormComponent />} />} />
-            <Route path="/parkingspaces/:id" element={<ProtectedRoute element={<ParkingSpacesForm />} />} />
-            <Route path="/activeUsers/:id" element={<ProtectedRoute element={<ParkingOwnerScreen />} />} />
+            <Route
+              path="/bookings"
+              element={<ProtectedRoute element={<MapComponent />} />}
+            />
+            <Route path="/tickets" element={<TicketScreen />} />
+            <Route
+              path="/parkingOwner"
+              element={
+                <ProtectedRoute element={<ParkAdmin />} roles={["parkAdmin"]} />
+              }
+            />
+            <Route
+              path="/admindashboard"
+              element={
+                <ProtectedRoute
+                  element={<AdminDashboard />}
+                  roles={["admin"]}
+                />
+              }
+            />
+            <Route
+              path="/users/:id"
+              element={<ProtectedRoute element={<UserFormComponent />} />}
+            />
+            <Route
+              path="/parkingspaces/:id"
+              element={<ProtectedRoute element={<ParkingSpacesForm />} />}
+            />
+            <Route
+              path="/activeUsers/:id"
+              element={<ProtectedRoute element={<ParkingOwnerScreen />} />}
+            />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/contact" element={<Contact />} />

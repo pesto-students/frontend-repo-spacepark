@@ -24,33 +24,60 @@
   grid-gap: 20px;
   margin-top: 40px;
 }
-
 .ticket-card {
-  background-color: #d8adca;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.ticket-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transform: translateY(-4px);
+  background-color: #b8a8ee; /* Background color */
+  border: 1px solid #ddd; /* Border color */
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px; /* Padding inside the card */
+  display: flex;
+  flex-direction: column; /* Stack child elements vertically */
+  font-weight: bold; /* Bold text */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for card */
+  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+  max-width: 400px; /* Maximum width for the card */
+  margin: 0 auto; /* Center the card horizontally */
 }
 
 .ticket-card h3 {
-  margin-top: 0;
+  margin-top: 0; /* Remove top margin for the first heading */
+  margin-bottom: 10px; /* Space between heading and the next element */
+  font-size: 1.5em; /* Font size for the heading */
 }
 
 .ticket-card p {
-  margin: 5px 0;
+  margin: 5px 0; /* Margin for paragraphs */
+  font-size: 1em; /* Font size for paragraphs */
+  color: #333; /* Text color */
 }
 
-.ticket-card .status {
-  font-weight: bold;
-}
+// .ticket-card {
+//   background-color: #b8a8ee;
+//   border: 1px solid #ddd;
+//   border-radius: 8px;
+//   padding: 20px;
+//   display: flex;
+//   max-width: 400px;
+//   font-weight: bold;
+//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+//   transition: box-shadow 0.3s ease, transform 0.3s ease;
+// }
+
+// .ticket-card:hover {
+//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+//   transform: translateY(-4px);
+// }
+
+// .ticket-card h3 {
+//   margin-top: 0;
+// }
+
+// .ticket-card p {
+//   margin: 5px 0;
+// }
+
+// .ticket-card .status {
+//   font-weight: bold;
+// }
 
 @media (max-width: 768px) {
   .ticket-cards {
