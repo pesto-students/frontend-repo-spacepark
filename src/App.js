@@ -55,7 +55,10 @@ function App() {
               path="/bookings"
               element={<ProtectedRoute element={<MapComponent />} />}
             />
-            <Route path="/tickets" element={<TicketScreen />} />
+            <Route
+              path="/tickets"
+              element={<ProtectedRoute element={<TicketScreen />} />}
+            />
             <Route
               path="/parkingOwner"
               element={
