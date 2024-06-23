@@ -40,7 +40,7 @@ const parkingSpaceSchema = yup.object().shape({
 
 const RegisterParkingSpace = () => {
   const navigate = useNavigate(); 
-  const { setUser } = useUser();
+  const { setUser, setToken, setRole } = useUser();
   const [parkingSpace, setParkingSpace] = useState({
     username: "",
     password: "",
@@ -89,23 +89,26 @@ const RegisterParkingSpace = () => {
             setLocation({ placeName: display_name, lat: parseFloat(lat), lng: parseFloat(lon) });
           }
         }
+        // parkingSpaceData.token = localStorage.getItem('token'); 
          const userData = await CreatingParkingSpaceOwner(parkingSpaceData);
-         console.log(userData, 'UserData');
+         console.log(userData, 'UserData', userData.status);
 
          if(userData.status === 201){
-          // const { token, user } = userData.user;
+           // const { token, user } = userData.user;
+           setUser(userData.user); 
+           setToken(userData.token);
+           setRole(userData.user.role);
         localStorage.setItem('user', JSON.stringify(userData.user));
         localStorage.setItem('role', userData.user.role);
         localStorage.setItem('token', userData.token);
 
-        setUser(userData.user); 
           const createService =  await CreateService({userId:userData.user.id, services:parkingSpaceData.services});
           if(createService) {
             const parkingSpaceCreation = await ParkingSapceCreation({userId: userData.user.id, serviceId: createService.id, location: parkingSpace.location, noOfSpaces: parkingSpace.numberOfSpaces, latitude: location.lat, longitude: location.lng})
             console.log(parkingSpaceCreation, 'PArkingSpacce ');
+            parkingSpaceCreation && navigate('/parkingOwner');
           }
           }
-          navigate('/parkingOwner');
         console.log("Form submitted successfully with data:", parkingSpaceData);
       })
       .catch((validationError) => {
