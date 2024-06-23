@@ -1,5 +1,5 @@
 // src/RegisterParkingSpace.js
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Form, FormGroup, Input, Button, Alert, Container, Label } from "reactstrap";
 import { useAtom } from 'jotai';
 import * as yup from "yup";
@@ -38,18 +38,19 @@ const parkingSpaceSchema = yup.object().shape({
     .min(1, 'Select at least one service')
 });
 
+const initialParkingSpaceState = {
+  username: "",
+  password: "",
+  email: "",
+  numberOfSpaces: "",
+  location: "",
+  services: [],
+};
+
 const RegisterParkingSpace = () => {
   const navigate = useNavigate(); 
   const { setUser, setToken, setRole } = useUser();
-  const [parkingSpace, setParkingSpace] = useState({
-    username: "",
-    password: "",
-    email: "",
-    numberOfSpaces: "",
-    location: "",
-    services: [],
-  });
-
+  const [parkingSpace, setParkingSpace] = useState(initialParkingSpaceState);
   const [error, setError] = useState(null);
   const [selectedServices] = useAtom(selectedServicesAtom);
   const [servicePrices] = useAtom(servicePricesAtom);
@@ -57,14 +58,16 @@ const RegisterParkingSpace = () => {
     placeName: '',
     lat: 0,
     lng: 0
-  })
+  });
+
+  const servicePriceSelectorRef = useRef();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setParkingSpace({ ...parkingSpace, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const nominatim = new Nominatim();
 
@@ -78,42 +81,63 @@ const RegisterParkingSpace = () => {
       services: servicesData
     };
 
-    parkingSpaceSchema
-      .validate(parkingSpaceData, { abortEarly: false })
-      .then(async() => {
-        setError(null);
-        if(parkingSpace.location){
-          const results = await nominatim.search({ q: parkingSpace.location, addressdetails: true });
-          if(results && results.length >0){
-            const { lat, lon, display_name } = results[0];
-            setLocation({ placeName: display_name, lat: parseFloat(lat), lng: parseFloat(lon) });
-          }
-        }
-        // parkingSpaceData.token = localStorage.getItem('token'); 
-         const userData = await CreatingParkingSpaceOwner(parkingSpaceData);
-         console.log(userData, 'UserData', userData.status);
+    try {
+      await parkingSpaceSchema.validate(parkingSpaceData, { abortEarly: false });
 
-         if(userData.status === 201){
-           // const { token, user } = userData.user;
-           setUser(userData.user); 
-           setToken(userData.token);
-           setRole(userData.user.role);
+      setError(null);
+      if (parkingSpace.location) {
+        const results = await nominatim.search({ q: parkingSpace.location, addressdetails: true });
+        if (results && results.length > 0) {
+          const { lat, lon, display_name } = results[0];
+          setLocation({ placeName: display_name, lat: parseFloat(lat), lng: parseFloat(lon) });
+        }
+      }
+      
+      const userData = await CreatingParkingSpaceOwner(parkingSpaceData);
+      console.log(userData, 'UserData', userData.status);
+
+      if (userData.status === 201) {
+        setUser(userData.user); 
+        setToken(userData.token);
+        setRole(userData.user.role);
         localStorage.setItem('user', JSON.stringify(userData.user));
         localStorage.setItem('role', userData.user.role);
         localStorage.setItem('token', userData.token);
 
-          const createService =  await CreateService({userId:userData.user.id, services:parkingSpaceData.services});
-          if(createService) {
-            const parkingSpaceCreation = await ParkingSapceCreation({userId: userData.user.id, serviceId: createService.id, location: parkingSpace.location, noOfSpaces: parkingSpace.numberOfSpaces, latitude: location.lat, longitude: location.lng})
-            console.log(parkingSpaceCreation, 'PArkingSpacce ');
-            parkingSpaceCreation && navigate('/parkingOwner');
+        const createService =  await CreateService({userId: userData.user.id, services: parkingSpaceData.services});
+        if (createService) {
+          const parkingSpaceCreation = await ParkingSapceCreation({
+            userId: userData.user.id,
+            serviceId: createService.id,
+            location: parkingSpace.location,
+            noOfSpaces: parkingSpace.numberOfSpaces,
+            latitude: location.lat,
+            longitude: location.lng
+          });
+          console.log(parkingSpaceCreation, 'PArkingSpacce ');
+          if (parkingSpaceCreation) {
+            navigate('/parkingOwner');
           }
-          }
-        console.log("Form submitted successfully with data:", parkingSpaceData);
-      })
-      .catch((validationError) => {
-        setError(validationError.errors[0]);
-      });
+        }
+        
+        // Only reset the necessary fields
+        setParkingSpace(prevState => ({
+          ...prevState,
+          numberOfSpaces: "",
+          location: "",
+          services: [],
+        }));
+
+        // Clear ServicePriceSelector inputs
+        if (servicePriceSelectorRef.current) {
+          servicePriceSelectorRef.current.clearInputs();
+        }
+      }
+
+      console.log("Form submitted successfully with data:", parkingSpaceData);
+    } catch (validationError) {
+      setError(validationError.errors[0]);
+    }
   };
 
   return (
@@ -182,7 +206,7 @@ const RegisterParkingSpace = () => {
           <Label className="f-20 bold p-2">Services Offered (select at least one)</Label>
           <div>
             <FormGroup check className="f-20 px-0 mx-0 my-1">
-              <ServicePriceSelector />
+              <ServicePriceSelector ref={servicePriceSelectorRef} />
             </FormGroup>
           </div>
         </FormGroup>
