@@ -9,14 +9,11 @@ const Profile = () => {
   const [editMode, setEditMode] = useState(false);
   const [qrCode, setQrCode] = useState("");
   const [initialUser, setInitialUser] = useState(null); // To store initial user data for cancel action
-  const [qrCode, setQrCode] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userId = "1"; // Replace this with the actual user ID or use dynamic ID
-        const response = await axios.get(`/users/${userId}`); // Adjusted endpoint URL
         const userId = user?.id || localStorage.getItem("role");
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}users/${userId}`
@@ -28,7 +25,7 @@ const Profile = () => {
       }
     };
     fetchUser();
-  }, [setUser]);
+  }, [setUser,user?.id ]);
 
   useEffect(() => {
     if (user) {
