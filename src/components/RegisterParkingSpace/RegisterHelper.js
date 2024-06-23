@@ -3,7 +3,7 @@ import axios from "axios";
 export const CreatingParkingSpaceOwner = async (data) => {
     try {
     //   const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users?action=creatingParkUser`);
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/users?action=creatingParkUser`, data, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}users?action=creatingParkUser`, data, {
         headers: {
           'Content-Type': 'application/json',
         },

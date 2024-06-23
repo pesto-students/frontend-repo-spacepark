@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { selectedServicesAtom, servicePricesAtom } from '../../atom';
 import ServicePriceSelector from "./ServiceFormSelector";
 import Logo from "../Logo/Logo";
+import { useUser } from "../../context/userContext";
 import { CreatingParkingSpaceOwner, CreateService, ParkingSapceCreation } from "./RegisterHelper";
 import Nominatim from 'nominatim-geocoder';
 
@@ -39,6 +40,7 @@ const parkingSpaceSchema = yup.object().shape({
 
 const RegisterParkingSpace = () => {
   const navigate = useNavigate(); 
+  const { setUser } = useUser();
   const [parkingSpace, setParkingSpace] = useState({
     username: "",
     password: "",
@@ -89,7 +91,14 @@ const RegisterParkingSpace = () => {
         }
          const userData = await CreatingParkingSpaceOwner(parkingSpaceData);
          console.log(userData, 'UserData');
+
          if(userData.status === 201){
+          // const { token, user } = userData.user;
+        localStorage.setItem('user', JSON.stringify(userData.user));
+        localStorage.setItem('role', userData.user.role);
+        localStorage.setItem('token', userData.token);
+
+        setUser(userData.user); 
           const createService =  await CreateService({userId:userData.user.id, services:parkingSpaceData.services});
           if(createService) {
             const parkingSpaceCreation = await ParkingSapceCreation({userId: userData.user.id, serviceId: createService.id, location: parkingSpace.location, noOfSpaces: parkingSpace.numberOfSpaces, latitude: location.lat, longitude: location.lng})

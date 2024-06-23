@@ -20,6 +20,7 @@ import Profile from "./components/Profile/Profile";
 import QRCodeDisplay from "./components/QRCodeDisplay/QRCodeDisplay";
 import QRCodeScanner from "./components/QRCodeScanner/QRCodeScanner";
 import { UserProvider, useUser } from "./context/userContext";
+import ParkingOwnerScreen from "./components/QRCodeScanner/ParkingOwnerScreen";
 
 const ProtectedRoute = ({ element, roles = [], ...rest }) => {
   const { isAuthenticated, role } = useUser();
@@ -51,6 +52,7 @@ function App() {
             <Route path="/admindashboard" element={<ProtectedRoute element={<AdminDashboard />} roles={['admin']} />} />
             <Route path="/users/:id" element={<ProtectedRoute element={<UserFormComponent />} />} />
             <Route path="/parkingspaces/:id" element={<ProtectedRoute element={<ParkingSpacesForm />} />} />
+            <Route path="/activeUsers/:id" element={<ProtectedRoute element={<ParkingOwnerScreen />} />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/contact" element={<Contact />} />

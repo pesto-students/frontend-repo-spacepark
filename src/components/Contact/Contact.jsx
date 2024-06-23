@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import './Contact.scss';
+import { useUser } from '../../context/userContext';
 
 function Contact() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
-
+  const {user} = useUser();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -14,6 +15,7 @@ function Contact() {
       name,
       email,
       message,
+      userId: user.id
     };
 
     try {
