@@ -10,11 +10,18 @@ import "./Footer.scss";
 
 const Footer = () => {
   const [isVisible, setIsVisible] = useState(false);
+
   const handleScroll = () => {
-    const footerPosition = document.querySelector(".footer").offsetTop;
+    const footer = document.querySelector(".footer");
+    if (!footer) return;
+
+    const footerPosition = footer.offsetTop;
     const scrollPosition = window.scrollY + window.innerHeight;
+
     if (scrollPosition >= footerPosition) {
       setIsVisible(true);
+    } else {
+      setIsVisible(false);
     }
   };
 
@@ -24,6 +31,7 @@ const Footer = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   return (
     <footer className={`footer ${isVisible ? "visible" : ""}`}>
       <div className="footer-column">
@@ -60,8 +68,3 @@ const Footer = () => {
 };
 
 export default Footer;
-{
-  /* <a href="#" className="social-icon">
-<FontAwesomeIcon icon={faLinkedinIn} />
-</a> */
-}
