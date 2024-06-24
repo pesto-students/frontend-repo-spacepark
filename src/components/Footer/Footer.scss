@@ -10,7 +10,9 @@ $footer-bg-color: #4b4461;
 $footer-text-color: #ecf0f1;
 
 .footer {
+  margin-bottom: 0px;
   margin-top: 1rem;
+  bottom: 0%;
   background-color: $footer-bg-color;
   color: $footer-text-color;
   padding: 1rem 0.2rem 0.5rem;
