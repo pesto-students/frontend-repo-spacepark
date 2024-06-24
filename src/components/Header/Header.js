@@ -137,9 +137,6 @@ const Header = () => {
           <ListGroupItem>
             <Link to="/about" onClick={toggleSideNav}>About us</Link>
           </ListGroupItem>
-          <ListGroupItem>
-            <Link to="/contact" onClick={toggleSideNav}>Contact</Link>
-          </ListGroupItem>
           {isAuthenticated ? (
             <>
               <ListGroupItem>
