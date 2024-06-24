@@ -41,8 +41,8 @@ const ParkingSpacesForm = () => {
   const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
   const { id } = useParams();
-  const [selectedServices, setSelectedServices] = useAtom(selectedServicesAtom); // Use setSelectedServices to update services
-  const [servicePrices, setServicePrices] = useAtom(servicePricesAtom); // Use setServicePrices to update prices
+  const [selectedServices] = useAtom(selectedServicesAtom);
+  const [servicePrices] = useAtom(servicePricesAtom);
   const { user } = useUser();
   const servicePriceSelectorRef = useRef();
 
@@ -51,25 +51,14 @@ const ParkingSpacesForm = () => {
       const fetchParkingSpaceData = async () => {
         try {
           const response = await axios.get(`${process.env.REACT_APP_API_URL}api/parkingSpaces/${id}`);
-          const data = response.data;
-          setFormData({
-            numberOfSpaces: data.noOfSpaces,
-            location: data.location,
-            services: data.services.map(service => ({ service: service.service, price: service.price }))
-          });
-          setSelectedServices(data.services.map(service => ({ value: service.service, label: service.service })));
-          const prices = {};
-          data.services.forEach(service => {
-            prices[service.service] = service.price;
-          });
-          setServicePrices(prices);
+          setFormData(response.data);
         } catch (error) {
           console.error('Error fetching parking space data:', error);
         }
       };
       fetchParkingSpaceData();
     }
-  }, [id, setSelectedServices, setServicePrices]);
+  }, [id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
