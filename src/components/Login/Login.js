@@ -1,7 +1,6 @@
-// src/components/Login/Login.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Form, Container, FormGroup, Input, Button, Alert } from 'reactstrap';
+import { Form, Container, FormGroup, Input, Button, Alert, Spinner } from 'reactstrap'; // Import Spinner
 import Logo from '../Logo/Logo';
 import axios from 'axios';
 import { useUser } from '../../context/userContext';
@@ -13,6 +12,7 @@ const Login = () => {
   });
 
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
   const { setUser, setToken, setRole } = useUser();
 
@@ -26,6 +26,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(true); // Set loading to true
     console.log(formData, 'Form SDAagdbvujfb');
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}api/login`, formData, {
@@ -39,7 +40,8 @@ const Login = () => {
         setToken(token);
         setUser(user);
         setRole(user.role);
-        localStorage.setItem('token', token);localStorage.setItem('role', user.role);
+        localStorage.setItem('token', token);
+        localStorage.setItem('role', user.role);
         localStorage.setItem('user', JSON.stringify(user));
         navigate('/bookings');
       } else {
@@ -48,6 +50,8 @@ const Login = () => {
     } catch (err) {
       console.log(err, 'Error ');
       setError(err.response ? err.response.data.message : 'Something went wrong. Please try again later.');
+    } finally {
+      setLoading(false); // Set loading to false
     }
   };
 
@@ -69,6 +73,7 @@ const Login = () => {
               value={formData.username}
               onChange={handleChange}
               required
+              disabled={loading} // Disable input when loading
             />
           </FormGroup>
           <FormGroup>
@@ -81,14 +86,17 @@ const Login = () => {
               value={formData.password}
               onChange={handleChange}
               required
+              disabled={loading} // Disable input when loading
             />
           </FormGroup>
           {error && <Alert color="danger">{error}</Alert>}
-          <Button type="submit" className='back-color text-bold w-100 p-2 f-20'>Login</Button>
+          <Button type="submit" className='back-color text-bold w-100 p-2 f-20' disabled={loading}>
+            {loading ? <Spinner size="sm" /> : 'Login'} {/* Display loader when loading */}
+          </Button>
         </Form>
       </div>
       <p className='text-center mt-80 mb-80 f-20'>
-        or <Link to="/signup" className='text-color'>Signup</Link>
+        or <Link to="/signup" className='text-color' onClick={(e) => loading && e.preventDefault()}>Signup</Link>
       </p>
     </Container>
   );

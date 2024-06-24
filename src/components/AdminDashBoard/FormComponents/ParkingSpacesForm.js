@@ -1,6 +1,5 @@
-// src/components/ParkingSpacesForm.js
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Form, FormGroup, Label, Input, FormFeedback, Alert, Container } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, FormFeedback, Alert, Container, Spinner } from 'reactstrap';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as yup from 'yup';
@@ -39,10 +38,11 @@ const ParkingSpacesForm = () => {
   const [error, setError] = useState(null);
   const [location, setLocation] = useState({ placeName: '', lat: 0, lng: 0 });
   const [isDisabled, setIsDisabled] = useState(false);
+  const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
   const { id } = useParams();
-  const [selectedServices] = useAtom(selectedServicesAtom);
-  const [servicePrices] = useAtom(servicePricesAtom);
+  const [selectedServices, setSelectedServices] = useAtom(selectedServicesAtom); // Use setSelectedServices to update services
+  const [servicePrices, setServicePrices] = useAtom(servicePricesAtom); // Use setServicePrices to update prices
   const { user } = useUser();
   const servicePriceSelectorRef = useRef();
 
@@ -51,14 +51,25 @@ const ParkingSpacesForm = () => {
       const fetchParkingSpaceData = async () => {
         try {
           const response = await axios.get(`${process.env.REACT_APP_API_URL}api/parkingSpaces/${id}`);
-          setFormData(response.data);
+          const data = response.data;
+          setFormData({
+            numberOfSpaces: data.noOfSpaces,
+            location: data.location,
+            services: data.services.map(service => ({ service: service.service, price: service.price }))
+          });
+          setSelectedServices(data.services.map(service => ({ value: service.service, label: service.service })));
+          const prices = {};
+          data.services.forEach(service => {
+            prices[service.service] = service.price;
+          });
+          setServicePrices(prices);
         } catch (error) {
           console.error('Error fetching parking space data:', error);
         }
       };
       fetchParkingSpaceData();
     }
-  }, [id]);
+  }, [id, setSelectedServices, setServicePrices]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -68,6 +79,7 @@ const ParkingSpacesForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsDisabled(true);
+    setLoading(true); // Set loading to true
     const nominatim = new Nominatim();
     const userId = user?.id;
 
@@ -93,7 +105,7 @@ const ParkingSpacesForm = () => {
         }
       }
 
-      const createService =  await CreateService({userId: userId, services: parkingSpaceData.services});
+      const createService = await CreateService({ userId: userId, services: parkingSpaceData.services });
       if (createService) {
         const parkingSpaceCreation = await ParkingSapceCreation({
           userId: userId,
@@ -107,7 +119,7 @@ const ParkingSpacesForm = () => {
           navigate('/parkingOwner');
         }
       }
-      
+
       // Reset form fields after successful submission
       setFormData(initialFormData);
 
@@ -118,8 +130,10 @@ const ParkingSpacesForm = () => {
 
       console.log("Form submitted successfully with data:", parkingSpaceData);
     } catch (validationError) {
-      setIsDisabled(false);
       setError(validationError.errors[0]);
+    } finally {
+      setIsDisabled(false);
+      setLoading(false); // Reset loading state
     }
   };
 
@@ -130,7 +144,7 @@ const ParkingSpacesForm = () => {
       </div>
       <h2 className='text-center mb-40'>{id ? 'Edit Parking Space' : 'Register Parking Space'}</h2>
       <Form onSubmit={handleSubmit} className='mt-40'>
-      <FormGroup>
+        <FormGroup>
           <Input
             type="text"
             name="location"
@@ -139,7 +153,7 @@ const ParkingSpacesForm = () => {
             className='field-val mb-40'
             value={formData.location}
             onChange={handleInputChange}
-            disabled={isDisabled}
+            disabled={isDisabled || loading} // Disable input when loading
           />
           {errors.location && <FormFeedback>{errors.location}</FormFeedback>}
         </FormGroup>
@@ -152,7 +166,7 @@ const ParkingSpacesForm = () => {
             className='field-val mb-40'
             value={formData.numberOfSpaces}
             onChange={handleInputChange}
-            disabled={isDisabled}
+            disabled={isDisabled || loading} // Disable input when loading
           />
           {errors.numberOfSpaces && <FormFeedback>{errors.numberOfSpaces}</FormFeedback>}
         </FormGroup>
@@ -160,13 +174,13 @@ const ParkingSpacesForm = () => {
           <Label className='f-20 bold p-2'>Services Offered (select at least one)</Label>
           <div>
             <FormGroup check className='f-20 px-0 mx-0 my-1'>
-              <ServicePriceSelector ref={servicePriceSelectorRef} />
+              <ServicePriceSelector ref={servicePriceSelectorRef} disabled={isDisabled || loading} /> {/* Disable ServicePriceSelector when loading */}
             </FormGroup>
           </div>
         </FormGroup>
         {error && <Alert color='danger mt-60'>{error}</Alert>}
-        <Button type='submit' className='w-100 mt-3 back-color text-bold p-2 f-20' disabled={isDisabled}>
-          {id ? 'Update Parking Space' : 'Register for new parking space'}
+        <Button type='submit' className='w-100 mt-3 back-color text-bold p-2 f-20' disabled={isDisabled || loading}>
+          {loading ? <Spinner size="sm" /> : id ? 'Update Parking Space' : 'Register for new parking space'} {/* Display loader when loading */}
         </Button>
       </Form>
     </Container>

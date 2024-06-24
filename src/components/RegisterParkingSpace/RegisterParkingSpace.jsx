@@ -1,6 +1,5 @@
-// src/RegisterParkingSpace.js
 import React, { useState, useRef } from "react";
-import { Form, FormGroup, Input, Button, Alert, Container, Label } from "reactstrap";
+import { Form, FormGroup, Input, Button, Alert, Container, Label, Spinner } from "reactstrap"; // Import Spinner
 import { useAtom } from 'jotai';
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -52,6 +51,7 @@ const RegisterParkingSpace = () => {
   const { setUser, setToken, setRole } = useUser();
   const [parkingSpace, setParkingSpace] = useState(initialParkingSpaceState);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false); // Add loading state
   const [selectedServices] = useAtom(selectedServicesAtom);
   const [servicePrices] = useAtom(servicePricesAtom);
   const [location, setLocation] = useState({
@@ -69,6 +69,7 @@ const RegisterParkingSpace = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true
     const nominatim = new Nominatim();
 
     const servicesData = selectedServices.map(service => ({
@@ -137,6 +138,8 @@ const RegisterParkingSpace = () => {
       console.log("Form submitted successfully with data:", parkingSpaceData);
     } catch (validationError) {
       setError(validationError.errors[0]);
+    } finally {
+      setLoading(false); // Set loading to false
     }
   };
 
@@ -156,6 +159,8 @@ const RegisterParkingSpace = () => {
             className='field-val mb-40 mt-40'
             value={parkingSpace.username}
             onChange={handleInputChange}
+            required
+            disabled={loading} // Disable input when loading
           />
         </FormGroup>
         <FormGroup>
@@ -167,6 +172,8 @@ const RegisterParkingSpace = () => {
             className='field-val mb-40 mt-40'
             value={parkingSpace.password}
             onChange={handleInputChange}
+            required
+            disabled={loading} // Disable input when loading
           />
         </FormGroup>
         <FormGroup>
@@ -178,6 +185,8 @@ const RegisterParkingSpace = () => {
             className='field-val mb-40 mt-40'
             value={parkingSpace.email}
             onChange={handleInputChange}
+            required
+            disabled={loading} // Disable input when loading
           />
         </FormGroup>
         <FormGroup>
@@ -189,6 +198,8 @@ const RegisterParkingSpace = () => {
             className='field-val mb-40'
             value={parkingSpace.numberOfSpaces}
             onChange={handleInputChange}
+            required
+            disabled={loading} // Disable input when loading
           />
         </FormGroup>
         <FormGroup>
@@ -200,19 +211,21 @@ const RegisterParkingSpace = () => {
             className='field-val mb-40'
             value={parkingSpace.location}
             onChange={handleInputChange}
+            required
+            disabled={loading} // Disable input when loading
           />
         </FormGroup>
         <FormGroup>
           <Label className="f-20 bold p-2">Services Offered (select at least one)</Label>
           <div>
             <FormGroup check className="f-20 px-0 mx-0 my-1">
-              <ServicePriceSelector ref={servicePriceSelectorRef} />
+              <ServicePriceSelector ref={servicePriceSelectorRef} disabled={loading} /> {/* Disable ServicePriceSelector when loading */}
             </FormGroup>
           </div>
         </FormGroup>
         {error && <Alert color="danger mt-60">{error}</Alert>}
-        <Button type="submit" className="w-100 mt-3 back-color text-bold p-2 f-20">
-          Register for new parking space
+        <Button type="submit" className="w-100 mt-3 back-color text-bold p-2 f-20" disabled={loading}>
+          {loading ? <Spinner size="sm" /> : 'Register for new parking space'} {/* Display loader when loading */}
         </Button>
       </Form>
     </Container>

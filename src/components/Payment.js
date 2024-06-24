@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Button } from 'reactstrap';
+import { Button, Spinner } from 'reactstrap';
 import { time } from '../atom';
 import { activeSpace } from '../atom';
 import store from 'store';
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { parkingSpacesAtom } from './SearchComponent';
 import { useAtom } from 'jotai';
 
@@ -15,8 +15,12 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
   const [, setPrice] = useState(0);
   const [data, setData] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
+
   const handlePayment = async () => {
+    setLoading(true); // Set loading to true on button click
+
     const serviceId = parkingSpaces[0].filter(elem => elem.id === activeSpaces[0])[0].serviceId;
 
     const response = serviceId && await axios.get(`${process.env.REACT_APP_API_URL}api/services/${serviceId}`);
@@ -59,13 +63,17 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
           color: '#3399cc',
         },
         modal: {
-          ondismiss: () => alert('Payment process was cancelled')
+          ondismiss: () => {
+            alert('Payment process was cancelled');
+            setLoading(false); // Reset loading state on dismiss
+          }
         },
         handler: async function (response) {
           const resp = await updatePayment(response, orderData.orderID, 'success');
           if (resp) {
             await createTicket(resp, sumOfPrices, formData, dateTimeRange, serviceId, orderData.userId);
           }
+          setLoading(false); // Reset loading state on success
         },
       };
 
@@ -73,11 +81,13 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
       rzp1.on('payment.failed', function (response) {
         console.error('Payment failed', response);
         logFailedPayment(response, orderData.orderID, 'failure');
+        setLoading(false); // Reset loading state on failure
       });
       rzp1.open();
     } catch (error) {
       console.error('Error initiating payment:', error);
       alert('Error initiating payment');
+      setLoading(false); // Reset loading state on catch
     }
   };
 
@@ -151,9 +161,9 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
       }
 
       setSuccessMessage('Ticket created successfully!');
-      setTimeout(() =>{
-        navigate('/tickets')
-      },3000)
+      setTimeout(() => {
+        navigate('/tickets');
+      }, 3000);
       resetForm();
     } catch (error) {
       console.error('Error creating ticket:', error);
@@ -186,9 +196,9 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
       <Button
         onClick={handlePayment}
         className='back-color text-bold w-100 p-2 f-20'
-        disabled={!isFormValid} // Disable the button if the form is not valid
+        disabled={!isFormValid || loading} // Disable the button if the form is not valid or if loading
       >
-        Proceed to payment
+        {loading ? <Spinner size="sm" /> : 'Proceed to payment'} {/* Display loader when loading */}
       </Button>
     </div>
   );

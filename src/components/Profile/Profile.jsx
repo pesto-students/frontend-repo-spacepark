@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-//import QRCode from "qrcode.react";
 import { useUser } from "../../context/userContext";
 import "./Profile.scss";
 
@@ -10,6 +9,7 @@ const Profile = () => {
   const [qrCode, setQrCode] = useState("");
   const [initialUser, setInitialUser] = useState(null); // To store initial user data for cancel action
   const [selectedFile, setSelectedFile] = useState(null);
+  const [loading, setLoading] = useState(false); // Loading state
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -25,7 +25,7 @@ const Profile = () => {
       }
     };
     fetchUser();
-  }, [setUser,user?.id ]);
+  }, [setUser, user?.id]);
 
   useEffect(() => {
     if (user) {
@@ -44,6 +44,7 @@ const Profile = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true
     try {
       if (selectedFile) {
         const formData = new FormData();
@@ -71,6 +72,8 @@ const Profile = () => {
     } catch (error) {
       console.error("Error updating user:", error);
       // Handle error (e.g., show error message to user)
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
 
@@ -80,6 +83,7 @@ const Profile = () => {
   };
 
   const generateQrCode = async () => {
+    setLoading(true); // Set loading to true
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}users/qrcode/${user.id}`
@@ -88,6 +92,8 @@ const Profile = () => {
     } catch (error) {
       console.error("Error generating QR code:", error);
       // Handle error (e.g., show error message to user)
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
 
@@ -124,9 +130,11 @@ const Profile = () => {
               onChange={handleFileChange}
             />
             <div className="form-buttons">
-              <button type="submit">Save</button>
-              <button type="button" onClick={handleCancelEdit}>
-                Cancel
+              <button type="submit" disabled={loading}>
+                {loading ? "Saving..." : "Save"}
+              </button>
+              <button type="button" onClick={handleCancelEdit} disabled={loading}>
+                {loading ? "Loading..." : "Cancel"}
               </button>
             </div>
           </form>
@@ -136,15 +144,20 @@ const Profile = () => {
             <p>Username: {user.username}</p>
             <p>Email: {user.email}</p>
             <p>Mobile: {user.mobile}</p>
-            <button onClick={() => setEditMode(true)}>Edit Profile</button>
+            <button onClick={() => setEditMode(true)} disabled={loading}>
+              {loading ? "Loading..." : "Edit Profile"}
+            </button>
           </div>
         )}
       </div>
-      {!editMode && <button onClick={generateQrCode}>Generate QR Code</button>}
+      {!editMode && (
+        <button onClick={generateQrCode} disabled={loading}>
+          {loading ? "Generating QR Code..." : "Generate QR Code"}
+        </button>
+      )}
       {qrCode && (
         <div className="qrcode-section">
           <img src={qrCode} alt="qrCode" />
-          {/* <QRCode value={qrCode} /> */}
           <a href={qrCode} download="qrcode.png">
             Download
           </a>
