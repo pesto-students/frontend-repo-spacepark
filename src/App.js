@@ -20,7 +20,6 @@ import UserFormComponent from "./components/AdminDashBoard/FormComponents/UserFo
 import ParkingSpacesForm from "./components/AdminDashBoard/FormComponents/ParkingSpacesForm";
 import AboutPage from "./components/StaticComponents/AboutUs";
 import BlogPage from "./components/StaticComponents/BlogPage";
-import Contact from "./components/Contact/Contact";
 import Profile from "./components/Profile/Profile";
 import QRCodeDisplay from "./components/QRCodeDisplay/QRCodeDisplay";
 import QRCodeScanner from "./components/QRCodeScanner/QRCodeScanner";
@@ -86,7 +85,6 @@ function App() {
             />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/blog" element={<BlogPage />} />
-            <Route path="/contact" element={<Contact />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
           <Footer />

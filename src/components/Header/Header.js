@@ -76,9 +76,7 @@ const Header = () => {
             <Link to="/tickets">Tickets</Link>
           </NavItem>
             }
-           { role !== 'admin' && <NavItem>
-              <Link to="/contact">Contact</Link>
-            </NavItem>}
+           
             {isAuthenticated ? (
               <>
 
