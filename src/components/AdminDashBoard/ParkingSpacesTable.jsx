@@ -9,6 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
+import { useUser } from "../../context/userContext";
 import { getParkingSpacesData } from '../../helpers/getUserData'; // Replace with the actual path to your API call
 
 const columns = [
@@ -30,6 +31,7 @@ export default function ParkingSpacesTable() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRows] = useState([]);
+  const { user } = useUser(); // Destructure to get the user
   const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
@@ -43,12 +45,18 @@ export default function ParkingSpacesTable() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getParkingSpacesData();
-      setRows(data.map((space, index) => createData(index + 1, space.id, space.userId, space.serviceId, space.location, space.latitude, space.longitude, space.noOfSpaces)));
+      if (user) { // Ensure user is available before fetching data
+        const data = await getParkingSpacesData(user.id);
+        if (Array.isArray(data)) {
+          setRows(data.map((space, index) => createData(index + 1, space.id, space.userId, space.serviceId, space.location, space.latitude, space.longitude, space.noOfSpaces)));
+        } else {
+          console.error("Data is not an array:", data);
+        }
+      }
     };
 
     fetchData();
-  }, []);
+  }, [user]);
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -78,7 +86,7 @@ export default function ParkingSpacesTable() {
                         return (
                           <TableCell key={column.id} align={column.align}>
                             <Button
-                                variant='contained'
+                              variant='contained'
                               className="back-color text-bold"
                               onClick={() => navigate(`/parkingSpaces/${row.id}`)}
                             >

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import QRCode from "qrcode.react";
+//import QRCode from "qrcode.react";
 import { useUser } from "../../context/userContext";
 import "./Profile.scss";
 
@@ -14,7 +14,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userId = user?.id || localStorage.getItem("role");
+        const userId = user?.id;
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}users/${userId}`
         );
@@ -143,7 +143,8 @@ const Profile = () => {
       {!editMode && <button onClick={generateQrCode}>Generate QR Code</button>}
       {qrCode && (
         <div className="qrcode-section">
-          <QRCode value={qrCode} />
+          <img src={qrCode} alt="qrCode" />
+          {/* <QRCode value={qrCode} /> */}
           <a href={qrCode} download="qrcode.png">
             Download
           </a>

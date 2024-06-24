@@ -1,191 +1,176 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
+// src/components/ParkingSpacesForm.js
+import React, { useState, useEffect, useRef } from 'react';
+import { Button, Form, FormGroup, Label, Input, FormFeedback, Alert, Container } from 'reactstrap';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import * as yup from 'yup';
+import { useAtom } from 'jotai';
+import { selectedServicesAtom, servicePricesAtom } from '../../../atom';
+import ServicePriceSelector from '../../RegisterParkingSpace/ServiceFormSelector';
+import { CreateService, ParkingSapceCreation } from "../../RegisterParkingSpace/RegisterHelper";
 import Logo from '../../Logo/Logo';
+import { useUser } from "../../../context/userContext";
+import Nominatim from 'nominatim-geocoder';
+
+const parkingSpaceSchema = yup.object().shape({
+  location: yup.string().required('Location is required'),
+  numberOfSpaces: yup
+    .number()
+    .required('Number of spaces available is required')
+    .positive('Number of spaces must be a positive integer')
+    .integer('Number of spaces must be a whole number'),
+  services: yup.array()
+    .of(yup.object().shape({
+      service: yup.string().required('Service is required'),
+      price: yup.number().typeError('Price must be a number').required('Price is required').positive('Price must be positive')
+    }))
+    .min(1, 'Select at least one service')
+});
 
 const initialFormData = {
-  userId: '',
-  serviceId: '',
+  numberOfSpaces: '',
   location: '',
-  latitude: '',
-  longitude: '',
-  noOfSpaces: '',
+  services: [],
 };
 
 const ParkingSpacesForm = () => {
   const [formData, setFormData] = useState(initialFormData);
-  const [errors, setErrors] = useState({});
+  const [errors] = useState({});
+  const [error, setError] = useState(null);
+  const [location, setLocation] = useState({ placeName: '', lat: 0, lng: 0 });
+  const [isDisabled, setIsDisabled] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
+  const [selectedServices] = useAtom(selectedServicesAtom);
+  const [servicePrices] = useAtom(servicePricesAtom);
+  const { user } = useUser();
+  const servicePriceSelectorRef = useRef();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}api/parkingSpaces/${id}`);
-        setFormData(response.data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
+    if (id) {
+      const fetchParkingSpaceData = async () => {
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_API_URL}api/parkingSpaces/${id}`);
+          setFormData(response.data);
+        } catch (error) {
+          console.error('Error fetching parking space data:', error);
+        }
+      };
+      fetchParkingSpaceData();
+    }
   }, [id]);
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.userId) {
-      newErrors.userId = 'User ID is required';
-    } else if (isNaN(formData.userId)) {
-      newErrors.userId = 'User ID must be a number';
-    }
-
-    if (!formData.serviceId) {
-      newErrors.serviceId = 'Service ID is required';
-    } else if (isNaN(formData.serviceId)) {
-      newErrors.serviceId = 'Service ID must be a number';
-    }
-
-    if (!formData.location) {
-      newErrors.location = 'Location is required';
-    } else if (formData.location.trim() === '') {
-      newErrors.location = 'Location cannot be empty';
-    }
-
-    if (!formData.latitude) {
-      newErrors.latitude = 'Latitude is required';
-    } else if (isNaN(formData.latitude)) {
-      newErrors.latitude = 'Latitude must be a number';
-    }
-
-    if (!formData.longitude) {
-      newErrors.longitude = 'Longitude is required';
-    } else if (isNaN(formData.longitude)) {
-      newErrors.longitude = 'Longitude must be a number';
-    }
-
-    if (!formData.noOfSpaces) {
-      newErrors.noOfSpaces = 'Number of spaces is required';
-    } else if (isNaN(formData.noOfSpaces)) {
-      newErrors.noOfSpaces = 'Number of spaces must be a number';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
+    setIsDisabled(true);
+    const nominatim = new Nominatim();
+    const userId = user?.id;
+
+    const servicesData = selectedServices.map(service => ({
+      service: service.value,
+      price: servicePrices[service.value] || ''
+    }));
+
+    const parkingSpaceData = {
+      ...formData,
+      services: servicesData
+    };
+
     try {
-      id ? await axios.put(`${process.env.REACT_APP_API_URL}api/parkingSpaces/${id}`, formData) : await axios.post(`${process.env.REACT_APP_API_URL}/api/parkingSpaces/`, formData) ;
-      id ? navigate('/admindashboard') : navigate('parkadmin');
-      setFormData(initialFormData);
-    } catch (error) {
-      if (error.response && error.response.data && error.response.data.errors) {
-        setErrors(error.response.data.errors);
-      } else {
-        console.error('Error:', error);
+      await parkingSpaceSchema.validate(parkingSpaceData, { abortEarly: false });
+
+      setError(null);
+      if (formData.location) {
+        const results = await nominatim.search({ q: formData.location, addressdetails: true });
+        if (results && results.length > 0) {
+          const { lat, lon, display_name } = results[0];
+          setLocation({ placeName: display_name, lat: parseFloat(lat), lng: parseFloat(lon) });
+        }
       }
+
+      const createService =  await CreateService({userId: userId, services: parkingSpaceData.services});
+      if (createService) {
+        const parkingSpaceCreation = await ParkingSapceCreation({
+          userId: userId,
+          serviceId: createService.id,
+          location: formData.location,
+          noOfSpaces: formData.numberOfSpaces,
+          latitude: location.lat,
+          longitude: location.lng
+        });
+        if (parkingSpaceCreation) {
+          navigate('/parkingOwner');
+        }
+      }
+      
+      // Reset form fields after successful submission
+      setFormData(initialFormData);
+
+      // Clear ServicePriceSelector inputs if available
+      if (servicePriceSelectorRef.current) {
+        servicePriceSelectorRef.current.clearInputs();
+      }
+
+      console.log("Form submitted successfully with data:", parkingSpaceData);
+    } catch (validationError) {
+      setIsDisabled(false);
+      setError(validationError.errors[0]);
     }
   };
 
   return (
-    <>
-      <div className='w-50 mx-auto'>
+    <Container className="login-container" fluid>
+      <div className='d-flex justify-content-center mb-80'>
         <Logo />
       </div>
-      <Form onSubmit={handleSubmit} className='w-50 mx-auto mt-80'>
-        <FormGroup>
-          <Label for="userId" className='fs-20 p-1'>User Id</Label>
-          <Input
-            type="text"
-            name="userId"
-            id="userId"
-            className='p-2'
-            value={formData.userId}
-            onChange={handleChange}
-            invalid={!!errors.userId}
-          />
-          {errors.userId && <FormFeedback>{errors.userId}</FormFeedback>}
-        </FormGroup>
-        <FormGroup>
-          <Label for="serviceId" className='fs-20 p-1'>Service Id</Label>
-          <Input
-            type="text"
-            name="serviceId"
-            id="serviceId"
-            className='p-2'
-            value={formData.serviceId}
-            onChange={handleChange}
-            invalid={!!errors.serviceId}
-          />
-          {errors.serviceId && <FormFeedback>{errors.serviceId}</FormFeedback>}
-        </FormGroup>
-        <FormGroup>
-          <Label for="location" className='fs-20 p-1'>Location</Label>
+      <h2 className='text-center mb-40'>{id ? 'Edit Parking Space' : 'Register Parking Space'}</h2>
+      <Form onSubmit={handleSubmit} className='mt-40'>
+      <FormGroup>
           <Input
             type="text"
             name="location"
             id="location"
-            className='p-2'
+            placeholder="Enter your location"
+            className='field-val mb-40'
             value={formData.location}
-            onChange={handleChange}
-            invalid={!!errors.location}
+            onChange={handleInputChange}
+            disabled={isDisabled}
           />
           {errors.location && <FormFeedback>{errors.location}</FormFeedback>}
         </FormGroup>
         <FormGroup>
-          <Label for="latitude" className='fs-20 p-1'>Latitude</Label>
-          <Input
-            type="text"
-            name="latitude"
-            id="latitude"
-            className='p-2'
-            value={formData.latitude}
-            onChange={handleChange}
-            invalid={!!errors.latitude}
-          />
-          {errors.latitude && <FormFeedback>{errors.latitude}</FormFeedback>}
-        </FormGroup>
-        <FormGroup>
-          <Label for="longitude" className='fs-20 p-1'>Longitude</Label>
-          <Input
-            type="text"
-            name="longitude"
-            id="longitude"
-            className='p-2'
-            value={formData.longitude}
-            onChange={handleChange}
-            invalid={!!errors.longitude}
-          />
-          {errors.longitude && <FormFeedback>{errors.longitude}</FormFeedback>}
-        </FormGroup>
-        <FormGroup>
-          <Label for="noOfSpaces" className='fs-20 p-1'>No of spaces</Label>
           <Input
             type="number"
-            name="noOfSpaces"
-            id="noOfSpaces"
-            className='p-2'
-            value={formData.noOfSpaces}
-            onChange={handleChange}
-            invalid={!!errors.noOfSpaces}
+            name="numberOfSpaces"
+            id="numberOfSpaces"
+            placeholder="Enter number of spaces"
+            className='field-val mb-40'
+            value={formData.numberOfSpaces}
+            onChange={handleInputChange}
+            disabled={isDisabled}
           />
-          {errors.noOfSpaces && <FormFeedback>{errors.noOfSpaces}</FormFeedback>}
+          {errors.numberOfSpaces && <FormFeedback>{errors.numberOfSpaces}</FormFeedback>}
         </FormGroup>
-        <Button type="submit" className='w-100 mb-4 fs-20'>Create</Button>
+        <FormGroup>
+          <Label className='f-20 bold p-2'>Services Offered (select at least one)</Label>
+          <div>
+            <FormGroup check className='f-20 px-0 mx-0 my-1'>
+              <ServicePriceSelector ref={servicePriceSelectorRef} />
+            </FormGroup>
+          </div>
+        </FormGroup>
+        {error && <Alert color='danger mt-60'>{error}</Alert>}
+        <Button type='submit' className='w-100 mt-3 back-color text-bold p-2 f-20' disabled={isDisabled}>
+          {id ? 'Update Parking Space' : 'Register for new parking space'}
+        </Button>
       </Form>
-    </>
+    </Container>
   );
-}
+};
 
 export default ParkingSpacesForm;

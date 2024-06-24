@@ -1,5 +1,5 @@
 // src/ServicePriceSelector.js
-import React, {useState} from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import Select from 'react-select';
 import { useAtom } from 'jotai';
 import { selectedServicesAtom, servicePricesAtom } from '../../atom';
@@ -11,10 +11,17 @@ const serviceOptions = [
   { value: 'carcharging', label: 'Car Charging' },
 ];
 
-const ServicePriceSelector = () => {
+const ServicePriceSelector = forwardRef((props, ref) => {
   const [selectedServices, setSelectedServices] = useAtom(selectedServicesAtom);
   const [servicePrices, setServicePrices] = useAtom(servicePricesAtom);
   const [errors, setErrors] = useState({});
+
+  // Initial state values
+  const initialState = {
+    selectedServices: [],
+    servicePrices: {},
+    errors: {},
+  };
 
   const handleServiceChange = (selectedOptions) => {
     const selected = selectedOptions || [];
@@ -65,6 +72,14 @@ const ServicePriceSelector = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  useImperativeHandle(ref, () => ({
+    clearInputs() {
+      setSelectedServices(initialState.selectedServices);
+      setServicePrices(initialState.servicePrices);
+      setErrors(initialState.errors);
+    }
+  }));
+
   return (
     <div className="service-price-selector">
       <div>
@@ -77,11 +92,11 @@ const ServicePriceSelector = () => {
       </div>
       {selectedServices.map(service => (
         <div key={service.value} className="service-price-input">
-          <label  className='bold fs-20'>{service.label} Price:</label>
+          <label className='bold fs-20'>{service.label} Price:</label>
           <input
             className='padding-input'
             type="number"
-            value={servicePrices[service.value]}
+            value={servicePrices[service.value] || ''}
             onChange={(e) => handlePriceChange(service.value, e.target.value)}
             placeholder="Enter price"
           />
@@ -92,6 +107,6 @@ const ServicePriceSelector = () => {
       ))}
     </div>
   );
-};
+});
 
 export default ServicePriceSelector;
