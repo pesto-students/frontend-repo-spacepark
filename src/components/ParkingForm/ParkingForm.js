@@ -20,6 +20,7 @@ const ParkingForm = () => {
   const [dateRange, setDateRange] = useState(null); // Separate state for date range
   const [isFormValid, setIsFormValid] = useState(false); // State to check form validity
 
+
   useEffect(() => {
     console.log(formData, 'form Data');
   }, [formData]);
@@ -51,7 +52,7 @@ const ParkingForm = () => {
 
   const serviceOptions = services.map(service => ({
     value: service.service,
-    label: `${service.service} - $${service.price}`,
+    label: `${service.service} - ₹${service.price}`,
   }));
 
   return (

@@ -216,7 +216,7 @@ const RegisterParkingSpace = () => {
           />
         </FormGroup>
         <FormGroup>
-          <Label className="f-20 bold p-2">Services Offered (select at least one)</Label>
+          <Label className="f-20 bold p-2">Services Offered (select at least one) and Add perday charges for carpark service</Label>
           <div>
             <FormGroup check className="f-20 px-0 mx-0 my-1">
               <ServicePriceSelector ref={servicePriceSelectorRef} disabled={loading} /> {/* Disable ServicePriceSelector when loading */}

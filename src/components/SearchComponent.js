@@ -120,7 +120,7 @@ const SearchComponent = () => {
                 <ul>
                   {services.map((service) => (
                     <li key={service.service}>
-                      {service.service} - ${service.price}
+                      {service.service} - ₹{service.price}
                     </li>
                   ))}
                 </ul>

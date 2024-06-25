@@ -91,6 +91,7 @@ const ServicePriceSelector = forwardRef((props, ref) => {
         />
       </div>
       {selectedServices.map(service => (
+        <>
         <div key={service.value} className="service-price-input">
           <label className='bold fs-20'>{service.label} Price:</label>
           <input
@@ -99,11 +100,14 @@ const ServicePriceSelector = forwardRef((props, ref) => {
             value={servicePrices[service.value] || ''}
             onChange={(e) => handlePriceChange(service.value, e.target.value)}
             placeholder="Enter price"
-          />
+            />
+          </div>
+          <div>
           {errors[service.value] && (
-            <div className="error">{errors[service.value]}</div>
+            <div className="error mt-3">*{errors[service.value]}</div>
           )}
         </div>
+          </>
       ))}
     </div>
   );
