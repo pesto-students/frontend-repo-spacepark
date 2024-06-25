@@ -25,6 +25,7 @@ import QRCodeDisplay from "./components/QRCodeDisplay/QRCodeDisplay";
 import QRCodeScanner from "./components/QRCodeScanner/QRCodeScanner";
 import { UserProvider, useUser } from "./context/userContext";
 import ParkingOwnerScreen from "./components/QRCodeScanner/ParkingOwnerScreen";
+import Footer from "./components/Footer/Footer";
 
 const ProtectedRoute = ({ element, roles = [], ...rest }) => {
   const { isAuthenticated, role } = useUser();
@@ -129,6 +130,7 @@ function App() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
+          <Footer />
         </Router>
       </UserProvider>
     </React.StrictMode>

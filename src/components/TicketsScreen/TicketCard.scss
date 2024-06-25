@@ -6,15 +6,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
+  // background-color: #fff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   overflow: pretty; /* Ensure pseudo-elements are visible */
 }
 
 .info {
-  color: white;
+  // color: white;
   font-weight: bolder;
-  background-color: #724bf1;
+  // background-color: #724bf1;
   border-radius: 10px;
   padding: 5px;
   padding-bottom: 1px;
@@ -23,24 +23,24 @@
   //   background: linear-gradient(135deg, #f3f3f3 25%, #df6717ec 75%);
 }
 
-.timings {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
+// .timings {
+//   width: 100%;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+// }
 
-.timings p {
-  background-color: rgb(188, 231, 205);
-  padding: 10px;
-  margin: 0 10px;
-}
+// .timings p {
+//   // background-color: rgb(188, 231, 205);
+//   padding: 10px;
+//   margin: 0 10px;
+// }
 
 .active {
-  background-color: rgb(183, 241, 183);
+  // background-color: rgb(183, 241, 183);
 }
 .pending {
-  background-color: rgb(240, 173, 173);
+  // background-color: rgb(240, 173, 173);
 }
 
 .status {
@@ -49,11 +49,11 @@
   padding: 5px;
 }
 .expired {
-  background-color: rgb(134, 133, 133);
+  // background-color: rgb(134, 133, 133);
   color: rgb(37, 37, 37);
 }
 .completed {
-  background-color: rgb(140, 213, 241);
+  // background-color: rgb(140, 213, 241);
 }
 
 .ticket-content {
@@ -68,7 +68,7 @@
   z-index: 1;
   padding: 20px;
   border-radius: 8px; /* Optional: adds rounded corners */
-  background: white;
+  // background: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
 }

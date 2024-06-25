@@ -13,7 +13,6 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
   const parkingSpaces = useAtom(parkingSpacesAtom);
   const activeSpaces = useAtom(activeSpace);
   const timeS = useAtom(time);
-  const [setPrice] = useState(0);
   const [data, setData] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false); // Add loading state
@@ -37,9 +36,7 @@ const differenceInHours = endDateTime.diff(startDateTime, 'hours', true);
 
 return matchingService ? total + price : total;
 
-
     }, 0);
-    sumOfPrices && setPrice(sumOfPrices);
     
     try {
       const response = sumOfPrices && await fetch(`${process.env.REACT_APP_API_URL}api/payment/create-order`, {
@@ -175,31 +172,11 @@ return matchingService ? total + price : total;
       setTimeout(() => {
         navigate('/tickets');
       }, 3000);
-      resetForm();
     } catch (error) {
       console.error('Error creating ticket:', error);
     }
   };
 
-  const resetForm = () => {
-    setFormData({
-      carNumber: '',
-      checkInTime: '',
-      checkOutTime: '',
-      endDate: '',
-      mobile: '',
-      parkingSpaceId: '',
-      paymentId: '',
-      price: '',
-      serviceId: '',
-      services: [],
-      startDate: '',
-      status: '',
-      userId: '',
-    });
-    setPrice(0);
-    setData({});
-  };
 
   return (
     <div>
