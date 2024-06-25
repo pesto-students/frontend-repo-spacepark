@@ -58,9 +58,8 @@ function App() {
             <Route path="/tickets" element={<TicketScreen />} />
             <Route
               path="/parkingOwner"
-              element={
-                <ProtectedRoute element={<ParkAdmin />} roles={["parkAdmin"]} />
-              }
+              element={<ParkAdmin />}
+              roles={["parkAdmin"]}
             />
             <Route
               path="/admindashboard"
