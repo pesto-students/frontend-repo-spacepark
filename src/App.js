@@ -29,12 +29,48 @@ import Footer from "./components/Footer/Footer";
 
 const ProtectedRoute = ({ element, roles = [], ...rest }) => {
   const { isAuthenticated, role } = useUser();
+
   if (!isAuthenticated()) {
     return <Navigate to="/login" replace />;
   }
+
   if (roles.length && !roles.includes(role)) {
-    return <Navigate to="/bookings" replace />;
+    console.log(role, 'Role');
+    switch (role) {
+      case 'user':
+        return <Navigate to="/bookings" replace />;
+      case 'admin':
+        return <Navigate to="/admindashboard" replace />;
+      case 'parkAdmin':
+        return <Navigate to="/parkingOwner" replace />;
+      default:
+        return <Navigate to="/unauthorized" replace />;
+    }
   }
+
+  return element;
+};
+
+const RestrictedRoute = ({ element, restrictedRoles = [], ...rest }) => {
+  const { isAuthenticated, role } = useUser();
+
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (restrictedRoles.includes(role)) {
+    switch (role) {
+      case 'user':
+        return <Navigate to="/bookings" replace />;
+      case 'admin':
+        return <Navigate to="/admindashboard" replace />;
+      case 'parkAdmin':
+        return <Navigate to="/parkingOwner" replace />;
+      default:
+        return <Navigate to="/unauthorized" replace />;
+    }
+  }
+
   return element;
 };
 
@@ -53,9 +89,16 @@ function App() {
             <Route path="/registerspace" element={<RegisterParkingSpace />} />
             <Route
               path="/bookings"
-              element={<ProtectedRoute element={<MapComponent />} />}
+              element={
+                <RestrictedRoute element={<MapComponent />} restrictedRoles={["parkAdmin"]} />
+              }
             />
-            <Route path="/tickets" element={<TicketScreen />} />
+            <Route
+              path="/tickets"
+              element={
+                <RestrictedRoute element={<TicketScreen />} restrictedRoles={["parkAdmin"]} />
+              }
+            />
             <Route
               path="/parkingOwner"
               element={

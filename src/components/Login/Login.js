@@ -37,13 +37,23 @@ const Login = () => {
 
       if (response && response.status === 200) {
         const { token, user } = response.data;
+        setUser(user); 
         setToken(token);
-        setUser(user);
         setRole(user.role);
-        localStorage.setItem('token', token);
-        localStorage.setItem('role', user.role);
         localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('role',user.role);
+        localStorage.setItem('token',token);
         navigate('/bookings');
+        switch (user.role) {
+          case 'user':
+            return navigate("/bookings");
+          case 'admin':
+            return navigate("/admindashboard");
+          case 'parkAdmin':
+            return navigate("/parkingOwner");
+          default:
+            return navigate("/");
+        }
       } else {
         setError(response.data.message);
       }

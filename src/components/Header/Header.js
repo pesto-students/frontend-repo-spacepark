@@ -19,7 +19,7 @@ import { useUser } from '../../context/userContext';
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [sideNavOpen, setSideNavOpen] = useState(false);
-  const { user, setUser , role} = useUser();
+  const { user, setUser , role, setRole, setToken} = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,6 +42,8 @@ const Header = () => {
     localStorage.removeItem('role');
     localStorage.removeItem('user');
     setUser(null);
+    setRole(null);
+    setToken(null);
     navigate('/login');
   };
 

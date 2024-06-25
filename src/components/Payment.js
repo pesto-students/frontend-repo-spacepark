@@ -7,12 +7,12 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { parkingSpacesAtom } from './SearchComponent';
 import { useAtom } from 'jotai';
+import moment from 'moment';
 
 function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
   const parkingSpaces = useAtom(parkingSpacesAtom);
   const activeSpaces = useAtom(activeSpace);
   const timeS = useAtom(time);
-  const [, setPrice] = useState(0);
   const [data, setData] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false); // Add loading state
@@ -26,9 +26,17 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
     const response = serviceId && await axios.get(`${process.env.REACT_APP_API_URL}api/services/${serviceId}`);
     const sumOfPrices = formData && formData.services.reduce((total, service) => {
       const matchingService = response && response.data.services.find(detail => detail.service === service);
-      return matchingService ? total + parseFloat(matchingService.price) : total;
+      const startDateTime = moment(`${timeS[0].startDate} ${timeS[0].checkInTime}`, 'DD/MM/YYYY HH:mm');
+const endDateTime = moment(`${timeS[0].endDate} ${timeS[0].checkOutTime}`, 'DD/MM/YYYY HH:mm');
+const differenceInHours = endDateTime.diff(startDateTime, 'hours', true);
+
+      const price = matchingService.service === 'carparking' 
+  ? Math.ceil(parseFloat((matchingService.price / 24 )* differenceInHours)) 
+  : Math.ceil(parseFloat(matchingService.price));
+
+return matchingService ? total + price : total;
+
     }, 0);
-    sumOfPrices && setPrice(sumOfPrices);
     
     try {
       const response = sumOfPrices && await fetch(`${process.env.REACT_APP_API_URL}api/payment/create-order`, {
@@ -164,31 +172,11 @@ function Payment({ formData, dateTimeRange, isFormValid, setFormData }) {
       setTimeout(() => {
         navigate('/tickets');
       }, 3000);
-      resetForm();
     } catch (error) {
       console.error('Error creating ticket:', error);
     }
   };
 
-  const resetForm = () => {
-    setFormData({
-      carNumber: '',
-      checkInTime: '',
-      checkOutTime: '',
-      endDate: '',
-      mobile: '',
-      parkingSpaceId: '',
-      paymentId: '',
-      price: '',
-      serviceId: '',
-      services: [],
-      startDate: '',
-      status: '',
-      userId: '',
-    });
-    setPrice(0);
-    setData({});
-  };
 
   return (
     <div>
