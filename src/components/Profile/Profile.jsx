@@ -7,9 +7,8 @@ const Profile = () => {
   const { user, setUser } = useUser();
   const [editMode, setEditMode] = useState(false);
   const [qrCode, setQrCode] = useState("");
-  const [initialUser, setInitialUser] = useState(null); // To store initial user data for cancel action
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [loading, setLoading] = useState(false); // Loading state
+  const [initialUser, setInitialUser] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,7 +28,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (user) {
-      setInitialUser(user); // Store initial user data when user is fetched
+      setInitialUser(user);
     }
   }, [user]);
 
@@ -38,31 +37,11 @@ const Profile = () => {
     setUser({ ...user, [name]: value });
   };
 
-  const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
-
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true
+    setLoading(true);
     try {
-      if (selectedFile) {
-        const formData = new FormData();
-        formData.append("profileImage", selectedFile);
-        const uploadResponse = await axios.post(
-          `${process.env.REACT_APP_API_URL}uploadProfileImage/${user.id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        setUser({
-          ...user,
-          profilePicture: uploadResponse.data.profileImageUrl,
-        });
-      }
+      
 
       await axios.patch(
         `${process.env.REACT_APP_API_URL}users/${user.id}`,
@@ -71,19 +50,19 @@ const Profile = () => {
       setEditMode(false);
     } catch (error) {
       console.error("Error updating user:", error);
-      // Handle error (e.g., show error message to user)
+      // Handle error
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
   const handleCancelEdit = () => {
-    setUser(initialUser); // Reset user data to initial state
-    setEditMode(false); // Exit edit mode
+    setUser(initialUser);
+    setEditMode(false);
   };
 
   const generateQrCode = async () => {
-    setLoading(true); // Set loading to true
+    setLoading(true);
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}users/qrcode/${user.id}`
@@ -91,9 +70,9 @@ const Profile = () => {
       setQrCode(response.data.qrCode);
     } catch (error) {
       console.error("Error generating QR code:", error);
-      // Handle error (e.g., show error message to user)
+      // Handle error
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
@@ -111,58 +90,66 @@ const Profile = () => {
               name="username"
               value={user.username || ""}
               onChange={handleInputChange}
+              placeholder="Username"
+              className="profile-input"
             />
             <input
               type="email"
               name="email"
               value={user.email || ""}
               onChange={handleInputChange}
+              placeholder="Email"
+              className="profile-input"
             />
             <input
               type="text"
               name="mobile"
               value={user.mobile || ""}
               onChange={handleInputChange}
-            />
-            <input
-              type="file"
-              name="profilePicture"
-              onChange={handleFileChange}
+              placeholder="Mobile"
+              className="profile-input"
             />
             <div className="form-buttons">
-              <button type="submit" disabled={loading}>
+              <button type="submit" disabled={loading} className="save-button">
                 {loading ? "Saving..." : "Save"}
               </button>
-              <button type="button" onClick={handleCancelEdit} disabled={loading}>
+              <button
+                type="button"
+                onClick={handleCancelEdit}
+                disabled={loading}
+                className="cancel-button"
+              >
                 {loading ? "Loading..." : "Cancel"}
               </button>
             </div>
           </form>
         ) : (
           <div>
-            <p>User ID: {user.id}</p>
-            <p>Username: {user.username}</p>
-            <p>Email: {user.email}</p>
-            <p>Mobile: {user.mobile}</p>
-            <button onClick={() => setEditMode(true)} disabled={loading}>
-              {loading ? "Loading..." : "Edit Profile"}
-            </button>
+            <p><strong>User ID:</strong> {user.id}</p>
+            <p><strong>Username:</strong> {user.username}</p>
+            <p><strong>Email:</strong> {user.email}</p>
+            <p><strong>Mobile:</strong> {user.mobile}</p>
+            <div className="action-buttons">
+              <button onClick={() => setEditMode(true)} disabled={loading} className="edit-button">
+                {loading ? "Loading..." : "Edit Profile"}
+              </button>
+              <button onClick={generateQrCode} disabled={loading} className="generate-button">
+                {loading ? "Generating QR Code..." : "Generate QR Code"}
+              </button>
+            </div>
           </div>
         )}
       </div>
-      {!editMode && (
-        <button onClick={generateQrCode} disabled={loading}>
-          {loading ? "Generating QR Code..." : "Generate QR Code"}
-        </button>
-      )}
-      {qrCode && (
-        <div className="qrcode-section">
-          <img src={qrCode} alt="qrCode" />
-          <a href={qrCode} download="qrcode.png">
-            Download
-          </a>
-        </div>
-      )}
+      <div className="qr-code-container">
+        {qrCode && (
+          <div className="qrcode-section">
+            <img src={qrCode} alt="qrCode" className="qr-code-img" />
+            <a href={qrCode} download="qrcode.png" className="download-button">
+              Download QR Code
+            </a>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
