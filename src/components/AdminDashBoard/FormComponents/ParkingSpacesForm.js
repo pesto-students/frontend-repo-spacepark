@@ -164,7 +164,7 @@ const ParkingSpacesForm = () => {
       {/* <div className="d-flex justify-content-center mb-4">
         <Logo />
       </div> */}
-      <h2 className="text-center mb-4">
+      <h2 className="text-center mb-4 registerParkingSpaceHeading">
         {id ? "Edit Parking Space" : "Register Parking Space"}
       </h2>
       <Form onSubmit={handleSubmit} className="form">

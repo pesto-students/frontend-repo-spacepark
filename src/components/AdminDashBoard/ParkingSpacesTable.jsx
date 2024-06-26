@@ -98,18 +98,20 @@ export default function ParkingSpacesTable() {
       <TableContainer sx={{ height: "80vh" }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                  className="table-header"
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
+            <div className="head-row">
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                    className="table-header"
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </div>
           </TableHead>
           <TableBody>
             {rows
@@ -157,18 +159,17 @@ export default function ParkingSpacesTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      <div className="table-pagination">
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          className="table-pagination"
-        />
-      </div>
+
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 100]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        className="table-pagination"
+      />
     </Paper>
   );
 }

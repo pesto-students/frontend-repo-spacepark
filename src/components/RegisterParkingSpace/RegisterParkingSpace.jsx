@@ -1,14 +1,27 @@
 import React, { useState, useRef } from "react";
-import { Form, FormGroup, Input, Button, Alert, Container, Label, Spinner } from "reactstrap"; // Import Spinner
-import { useAtom } from 'jotai';
+import {
+  Form,
+  FormGroup,
+  Input,
+  Button,
+  Alert,
+  Container,
+  Label,
+  Spinner,
+} from "reactstrap"; // Import Spinner
+import { useAtom } from "jotai";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { selectedServicesAtom, servicePricesAtom } from '../../atom';
+import { selectedServicesAtom, servicePricesAtom } from "../../atom";
 import ServicePriceSelector from "./ServiceFormSelector";
 import Logo from "../Logo/Logo";
 import { useUser } from "../../context/userContext";
-import { CreatingParkingSpaceOwner, CreateService, ParkingSapceCreation } from "./RegisterHelper";
-import Nominatim from 'nominatim-geocoder';
+import {
+  CreatingParkingSpaceOwner,
+  CreateService,
+  ParkingSapceCreation,
+} from "./RegisterHelper";
+import Nominatim from "nominatim-geocoder";
 
 const parkingSpaceSchema = yup.object().shape({
   username: yup
@@ -29,12 +42,19 @@ const parkingSpaceSchema = yup.object().shape({
     .positive("Number of spaces must be a positive integer")
     .integer("Number of spaces must be a whole number"),
   location: yup.string().required("Location is required"),
-  services: yup.array()
-    .of(yup.object().shape({
-      service: yup.string().required('Service is required'),
-      price: yup.number().typeError('Price must be a number').required('Price is required').positive('Price must be positive')
-    }))
-    .min(1, 'Select at least one service')
+  services: yup
+    .array()
+    .of(
+      yup.object().shape({
+        service: yup.string().required("Service is required"),
+        price: yup
+          .number()
+          .typeError("Price must be a number")
+          .required("Price is required")
+          .positive("Price must be positive"),
+      })
+    )
+    .min(1, "Select at least one service"),
 });
 
 const initialParkingSpaceState = {
@@ -47,7 +67,7 @@ const initialParkingSpaceState = {
 };
 
 const RegisterParkingSpace = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const { setUser, setToken, setRole } = useUser();
   const [parkingSpace, setParkingSpace] = useState(initialParkingSpaceState);
   const [error, setError] = useState(null);
@@ -55,9 +75,9 @@ const RegisterParkingSpace = () => {
   const [selectedServices] = useAtom(selectedServicesAtom);
   const [servicePrices] = useAtom(servicePricesAtom);
   const [location, setLocation] = useState({
-    placeName: '',
+    placeName: "",
     lat: 0,
-    lng: 0
+    lng: 0,
   });
 
   const servicePriceSelectorRef = useRef();
@@ -72,40 +92,52 @@ const RegisterParkingSpace = () => {
     setLoading(true); // Set loading to true
     const nominatim = new Nominatim();
 
-    const servicesData = selectedServices.map(service => ({
+    const servicesData = selectedServices.map((service) => ({
       service: service.value,
-      price: servicePrices[service.value] || ''
+      price: servicePrices[service.value] || "",
     }));
 
     const parkingSpaceData = {
       ...parkingSpace,
-      services: servicesData
+      services: servicesData,
     };
 
     try {
-      await parkingSpaceSchema.validate(parkingSpaceData, { abortEarly: false });
+      await parkingSpaceSchema.validate(parkingSpaceData, {
+        abortEarly: false,
+      });
 
       setError(null);
       if (parkingSpace.location) {
-        const results = await nominatim.search({ q: parkingSpace.location, addressdetails: true });
+        const results = await nominatim.search({
+          q: parkingSpace.location,
+          addressdetails: true,
+        });
         if (results && results.length > 0) {
           const { lat, lon, display_name } = results[0];
-          setLocation({ placeName: display_name, lat: parseFloat(lat), lng: parseFloat(lon) });
+          setLocation({
+            placeName: display_name,
+            lat: parseFloat(lat),
+            lng: parseFloat(lon),
+          });
         }
       }
-      
+
       const userData = await CreatingParkingSpaceOwner(parkingSpaceData);
-      console.log(userData, 'UserData', userData.status);
+      console.log(userData, "UserData", userData.status);
 
       if (userData.status === 201) {
-        setUser(userData.user); 
+        setUser(userData.user);
         setToken(userData.token);
         setRole(userData.user.role);
-        localStorage.setItem('user', JSON.stringify(userData.user));
-        localStorage.setItem('role', userData.user.role);
-        localStorage.setItem('token', userData.token);
+        localStorage.setItem("user", JSON.stringify(userData.user));
+        localStorage.setItem("role", userData.user.role);
+        localStorage.setItem("token", userData.token);
 
-        const createService =  await CreateService({userId: userData.user.id, services: parkingSpaceData.services});
+        const createService = await CreateService({
+          userId: userData.user.id,
+          services: parkingSpaceData.services,
+        });
         if (createService) {
           const parkingSpaceCreation = await ParkingSapceCreation({
             userId: userData.user.id,
@@ -113,16 +145,16 @@ const RegisterParkingSpace = () => {
             location: parkingSpace.location,
             noOfSpaces: parkingSpace.numberOfSpaces,
             latitude: location.lat,
-            longitude: location.lng
+            longitude: location.lng,
           });
-          console.log(parkingSpaceCreation, 'PArkingSpacce ');
+          console.log(parkingSpaceCreation, "PArkingSpacce ");
           if (parkingSpaceCreation) {
-            navigate('/parkingOwner');
+            navigate("/parkingOwner");
           }
         }
-        
+
         // Only reset the necessary fields
-        setParkingSpace(prevState => ({
+        setParkingSpace((prevState) => ({
           ...prevState,
           numberOfSpaces: "",
           location: "",
@@ -156,21 +188,8 @@ const RegisterParkingSpace = () => {
             name="username"
             id="username"
             placeholder="Enter owner name"
-            className='field-val mb-40 mt-40'
+            className="field-val mb-40 mt-40"
             value={parkingSpace.username}
-            onChange={handleInputChange}
-            required
-            disabled={loading} // Disable input when loading
-          />
-        </FormGroup>
-        <FormGroup>
-          <Input
-            type="password"
-            name="password"
-            id="password-field"
-            placeholder="Enter your password"
-            className='field-val mb-40 mt-40'
-            value={parkingSpace.password}
             onChange={handleInputChange}
             required
             disabled={loading} // Disable input when loading
@@ -182,12 +201,25 @@ const RegisterParkingSpace = () => {
             name="email"
             id="email"
             placeholder="Enter your email"
-            className='field-val mb-40 mt-40'
+            className="field-val mb-40 mt-40"
             value={parkingSpace.email}
             onChange={handleInputChange}
             required
             disabled={loading} // Disable input when loading
           />
+          <FormGroup>
+            <Input
+              type="password"
+              name="password"
+              id="password-field"
+              placeholder="Enter your password"
+              className="field-val mb-40 mt-40"
+              value={parkingSpace.password}
+              onChange={handleInputChange}
+              required
+              disabled={loading} // Disable input when loading
+            />
+          </FormGroup>
         </FormGroup>
         <FormGroup>
           <Input
@@ -195,7 +227,7 @@ const RegisterParkingSpace = () => {
             name="numberOfSpaces"
             id="numberOfSpaces"
             placeholder="Enter number of spaces"
-            className='field-val mb-40'
+            className="field-val mb-40"
             value={parkingSpace.numberOfSpaces}
             onChange={handleInputChange}
             required
@@ -208,7 +240,7 @@ const RegisterParkingSpace = () => {
             name="location"
             id="location"
             placeholder="Enter your location"
-            className='field-val mb-40'
+            className="field-val mb-40"
             value={parkingSpace.location}
             onChange={handleInputChange}
             required
@@ -216,16 +248,27 @@ const RegisterParkingSpace = () => {
           />
         </FormGroup>
         <FormGroup>
-          <Label className="f-20 bold p-2">Services Offered (select at least one)</Label>
+          <Label className="f-20 bold p-2">
+            Services Offered (select at least one)
+          </Label>
           <div>
             <FormGroup check className="f-20 px-0 mx-0 my-1">
-              <ServicePriceSelector ref={servicePriceSelectorRef} disabled={loading} /> {/* Disable ServicePriceSelector when loading */}
+              <ServicePriceSelector
+                ref={servicePriceSelectorRef}
+                disabled={loading}
+              />{" "}
+              {/* Disable ServicePriceSelector when loading */}
             </FormGroup>
           </div>
         </FormGroup>
         {error && <Alert color="danger mt-60">{error}</Alert>}
-        <Button type="submit" className="w-100 mt-3 back-color text-bold p-2 f-20" disabled={loading}>
-          {loading ? <Spinner size="sm" /> : 'Register for new parking space'} {/* Display loader when loading */}
+        <Button
+          type="submit"
+          className="w-100 mt-3 back-color text-bold p-2 f-20"
+          disabled={loading}
+        >
+          {loading ? <Spinner size="sm" /> : "Register for new parking space"}{" "}
+          {/* Display loader when loading */}
         </Button>
       </Form>
     </Container>
