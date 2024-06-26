@@ -1,5 +1,4 @@
-// src/ServicePriceSelector.js
-import React, { useState, useImperativeHandle, forwardRef } from 'react';
+import React, { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
 import Select from 'react-select';
 import { useAtom } from 'jotai';
 import { selectedServicesAtom, servicePricesAtom } from '../../atom';
@@ -16,12 +15,22 @@ const ServicePriceSelector = forwardRef((props, ref) => {
   const [servicePrices, setServicePrices] = useAtom(servicePricesAtom);
   const [errors, setErrors] = useState({});
 
-  // Initial state values
-  const initialState = {
-    selectedServices: [],
-    servicePrices: {},
-    errors: {},
-  };
+  useEffect(() => {
+    if (props.initialServices) {
+      const initialSelectedServices = props.initialServices.map(service => ({
+        value: service.service,
+        label: service.service.charAt(0).toUpperCase() + service.service.slice(1).replace(/([A-Z])/g, ' $1').trim()
+      }));
+      const initialServicePrices = {};
+      props.initialServices.forEach(service => {
+        initialServicePrices[service.service] = service.price;
+      });
+
+      setSelectedServices(initialSelectedServices);
+      setServicePrices(initialServicePrices);
+      validatePrices(initialServicePrices);
+    }
+  }, [props.initialServices, setSelectedServices, setServicePrices]);
 
   const handleServiceChange = (selectedOptions) => {
     const selected = selectedOptions || [];
@@ -74,9 +83,23 @@ const ServicePriceSelector = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     clearInputs() {
-      setSelectedServices(initialState.selectedServices);
-      setServicePrices(initialState.servicePrices);
-      setErrors(initialState.errors);
+      setSelectedServices([]);
+      setServicePrices({});
+      setErrors({});
+    },
+    setServices(services) {
+      const initialSelectedServices = services.map(service => ({
+        value: service.service,
+        label: service.service.charAt(0).toUpperCase() + service.service.slice(1).replace(/([A-Z])/g, ' $1').trim()
+      }));
+      const initialServicePrices = {};
+      services.forEach(service => {
+        initialServicePrices[service.service] = service.price;
+      });
+
+      setSelectedServices(initialSelectedServices);
+      setServicePrices(initialServicePrices);
+      validatePrices(initialServicePrices);
     }
   }));
 

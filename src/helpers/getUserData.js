@@ -20,3 +20,14 @@ export const getParkingSpacesData = async (userId) => {
     return error;
   }
 }
+
+export const getServicesData = async (serviceId) => {
+  try {
+    console.log(serviceId, 'serviceId');
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}api/services/${serviceId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error in fetching services:", error);
+    return error;
+  }
+}

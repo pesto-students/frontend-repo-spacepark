@@ -14,6 +14,7 @@ import { getParkingSpacesData } from '../../helpers/getUserData'; // Replace wit
 
 const columns = [
   { id: 'serial', label: 'S.No.', minWidth: 100 },
+  { id: 'id', label: 'ParkingSpaceId', minWidth: 100 },
   { id: 'userId', label: 'User ID', minWidth: 100 },
   { id: 'serviceId', label: 'Service ID', minWidth: 100 },
   { id: 'location', label: 'Location', minWidth: 200 },
@@ -47,6 +48,7 @@ export default function ParkingSpacesTable() {
     const fetchData = async () => {
       if (user) { // Ensure user is available before fetching data
         const data = await getParkingSpacesData(user.id);
+        console.log(data);
         if (Array.isArray(data)) {
           setRows(data.map((space, index) => createData(index + 1, space.id, space.userId, space.serviceId, space.location, space.latitude, space.longitude, space.noOfSpaces)));
         } else {
@@ -57,6 +59,10 @@ export default function ParkingSpacesTable() {
 
     fetchData();
   }, [user]);
+
+  const handleEditClick = (row) => {
+    navigate(`/parkingSpaces/${row.id}`, { state: { row } });
+  };
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -88,7 +94,7 @@ export default function ParkingSpacesTable() {
                             <Button
                               variant='contained'
                               className="back-color text-bold"
-                              onClick={() => navigate(`/parkingSpaces/${row.id}`)}
+                              onClick={() => handleEditClick(row)}
                             >
                               Edit
                             </Button>

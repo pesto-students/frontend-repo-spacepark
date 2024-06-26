@@ -10,8 +10,7 @@ import {
   Container,
   Spinner,
 } from "reactstrap";
-import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import * as yup from "yup";
 import { useAtom } from "jotai";
 import {
@@ -22,11 +21,13 @@ import {
 import ServicePriceSelector from "../../RegisterParkingSpace/ServiceFormSelector";
 import {
   CreateService,
-  ParkingSapceCreation,
+  ParkingSpaceUpdate,
+  ParkingSapceCreation
 } from "../../RegisterParkingSpace/RegisterHelper";
 import Logo from "../../Logo/Logo";
 import { useUser } from "../../../context/userContext";
 import Nominatim from "nominatim-geocoder";
+import { getServicesData } from '../../../helpers/getUserData';
 
 const parkingSpaceSchema = yup.object().shape({
   location: yup.string().required("Location is required"),
@@ -62,9 +63,10 @@ const ParkingSpacesForm = () => {
   const [error, setError] = useState(null);
   const [location, setLocation] = useState({ placeName: "", lat: 0, lng: 0 });
   const [isDisabled, setIsDisabled] = useState(false);
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
+  const { state } = useLocation();
   const [selectedServices] = useAtom(selectedServicesAtom);
   const [servicePrices] = useAtom(servicePricesAtom);
   const { user } = useUser();
@@ -72,30 +74,41 @@ const ParkingSpacesForm = () => {
   const [activeIndex, setActiveIndex] = useAtom(menuIndexState);
 
   useEffect(() => {
-    if (id) {
-      const fetchParkingSpaceData = async () => {
+    if (state && state.row) {
+      const { location, noOfSpaces, serviceId } = state.row;
+
+      const fetchData = async () => {
         try {
-          const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}api/parkingSpaces/${id}`
-          );
-          setFormData(response.data);
+          const data = await getServicesData(serviceId);
+          const services = data.services.map(service => ({
+            service: service.service,
+            price: service.price
+          }));
+          console.log(services);
+          setFormData({ location, numberOfSpaces: noOfSpaces, services });
+
+          if (servicePriceSelectorRef.current) {
+            servicePriceSelectorRef.current.setServices(services);
+          }
         } catch (error) {
-          console.error("Error fetching parking space data:", error);
+          console.error("Error fetching service data:", error);
         }
       };
-      fetchParkingSpaceData();
+
+      fetchData();
     }
-  }, [id]);
+  }, [state]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (formType, e) => {
+    console.log(formType, 'formType');
     e.preventDefault();
     setIsDisabled(true);
-    setLoading(true); // Set loading to true
+    setLoading(true);
     const nominatim = new Nominatim();
     const userId = user?.id;
 
@@ -134,7 +147,8 @@ const ParkingSpacesForm = () => {
         userId: userId,
         services: parkingSpaceData.services,
       });
-      if (createService) {
+
+      if (createService && formType == "Register Parking Space") {
         const parkingSpaceCreation = await ParkingSapceCreation({
           userId: userId,
           serviceId: createService.id,
@@ -148,22 +162,36 @@ const ParkingSpacesForm = () => {
         }
       }
 
-      // Reset form fields after successful submission
+      if (createService && formType == "Edit Parking Space") {
+        console.log(state, 'state');
+        const parkingSpaceId = state?.row?.id;
+        const parkingSpaceUpdate = await ParkingSpaceUpdate({
+          userId: userId,
+          serviceId: createService.id,
+          location: formData.location,
+          noOfSpaces: formData.numberOfSpaces,
+          latitude: location.lat,
+          longitude: location.lng,
+        }, parkingSpaceId);
+
+        if (parkingSpaceUpdate) {
+          navigate("/parkingOwner");
+        }
+      }
+
       setFormData(initialFormData);
 
-      // Clear ServicePriceSelector inputs if available
       if (servicePriceSelectorRef.current) {
         servicePriceSelectorRef.current.clearInputs();
       }
 
       console.log("Form submitted successfully with data:", parkingSpaceData);
-      //anj-added this line to navigate to list after submission
       setActiveIndex(1);
     } catch (validationError) {
       setError(validationError.errors[0]);
     } finally {
       setIsDisabled(false);
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
@@ -185,7 +213,7 @@ const ParkingSpacesForm = () => {
             className="field-val mb-40"
             value={formData.location}
             onChange={handleInputChange}
-            disabled={isDisabled || loading} // Disable input when loading
+            disabled={isDisabled || loading}
           />
           {errors.location && <FormFeedback>{errors.location}</FormFeedback>}
         </FormGroup>
@@ -198,7 +226,7 @@ const ParkingSpacesForm = () => {
             className="field-val mb-40"
             value={formData.numberOfSpaces}
             onChange={handleInputChange}
-            disabled={isDisabled || loading} // Disable input when loading
+            disabled={isDisabled || loading}
           />
           {errors.numberOfSpaces && (
             <FormFeedback>{errors.numberOfSpaces}</FormFeedback>
@@ -214,8 +242,8 @@ const ParkingSpacesForm = () => {
               <ServicePriceSelector
                 ref={servicePriceSelectorRef}
                 disabled={isDisabled || loading}
-              />{" "}
-              {/* Disable ServicePriceSelector when loading */}
+                initialServices={formData.services}
+              />
             </FormGroup>
           </div>
         </FormGroup>
@@ -224,6 +252,7 @@ const ParkingSpacesForm = () => {
           type="submit"
           className="w-100 mt-3 back-color text-bold p-2 f-20"
           disabled={isDisabled || loading}
+          onClick={(e) => handleSubmit(id ? "Edit Parking Space" : "Register Parking Space", e)}
         >
           {loading ? (
             <Spinner size="sm" />
@@ -231,8 +260,7 @@ const ParkingSpacesForm = () => {
             "Update Parking Space"
           ) : (
             "Register for new parking space"
-          )}{" "}
-          {/* Display loader when loading */}
+          )}
         </Button>
       </Form>
     </Container>
