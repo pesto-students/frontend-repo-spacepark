@@ -58,7 +58,7 @@ const SearchComponent = () => {
     throttle(async (searchText) => {
       try {
         setLoading(true);
-        const nominatim = new Nominatim();
+        const nominatim = new Nominatim({ secure: true });
         const results = await nominatim.search({ q: searchText, addressdetails: true });
         if (results && results.length > 0) {
           const { lat, lon, display_name } = results[0];
