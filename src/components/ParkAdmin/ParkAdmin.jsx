@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { useAtom } from 'jotai';
-import ParkingSpacesTable from '../AdminDashBoard/ParkingSpacesTable';
-import MenuComponent from '../../components/AdminDashBoard/Menu';
-import { Row, Col } from 'reactstrap';
-import { menuIndexState } from '../../atom';
-import ParkingSpacesForm from '../AdminDashBoard/FormComponents/ParkingSpacesForm';
+import React, { useEffect } from "react";
+import { useAtom } from "jotai";
+import ParkingSpacesTable from "../AdminDashBoard/ParkingSpacesTable";
+import MenuComponent from "../../components/AdminDashBoard/Menu";
+import { Row, Col } from "reactstrap";
+import { menuIndexState } from "../../atom";
+import ParkingSpacesForm from "../AdminDashBoard/FormComponents/ParkingSpacesForm";
 
 function ParkAdmin() {
   const [activeIndex, setActiveIndex] = useAtom(menuIndexState);
@@ -26,18 +26,18 @@ function ParkAdmin() {
 
   return (
     <>
-      <h3 className='mt-4 text-center mb-80'>Welcome to parking owner dashboard!</h3>
-      <Row className='mx-0 px-0'>
-        <Col className='' style={{ cursor: 'pointer' }}>
+      <h3 className="mt-4 text-center mb-80">
+        Welcome to parking owner dashboard!
+      </h3>
+      <Row className="mx-0 px-0">
+        <Col className="" style={{ cursor: "pointer" }}>
           <MenuComponent
             activeIndex={activeIndex}
             changeMenuIndex={setActiveIndex}
-            options={['Add Parking Space', 'Parking Spaces List']}
+            options={["Add Parking Space", "Parking Spaces List"]}
           />
         </Col>
-        <Col className='col-9'>
-          {renderContent()}
-        </Col>
+        <Col className="col-9">{renderContent()}</Col>
       </Row>
     </>
   );
