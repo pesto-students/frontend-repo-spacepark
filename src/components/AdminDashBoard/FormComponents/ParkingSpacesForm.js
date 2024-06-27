@@ -109,7 +109,7 @@ const ParkingSpacesForm = () => {
     e.preventDefault();
     setIsDisabled(true);
     setLoading(true);
-    const nominatim = new Nominatim();
+    const nominatim = new Nominatim({ secure: true });
     const userId = user?.id;
 
     const servicesData = selectedServices.map((service) => ({

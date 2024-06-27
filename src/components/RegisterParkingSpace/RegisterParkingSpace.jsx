@@ -70,7 +70,7 @@ const RegisterParkingSpace = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); // Set loading to true
-    const nominatim = new Nominatim();
+    const nominatim = new Nominatim({ secure: true });
 
     const servicesData = selectedServices.map(service => ({
       service: service.value,
