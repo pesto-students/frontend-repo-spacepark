@@ -24,7 +24,6 @@ import {
   ParkingSpaceUpdate,
   ParkingSapceCreation
 } from "../../RegisterParkingSpace/RegisterHelper";
-import Logo from "../../Logo/Logo";
 import { useUser } from "../../../context/userContext";
 import Nominatim from "nominatim-geocoder";
 import { getServicesData } from '../../../helpers/getUserData';
@@ -59,7 +58,7 @@ const initialFormData = {
 
 const ParkingSpacesForm = () => {
   const [formData, setFormData] = useState(initialFormData);
-  const [errors] = useState({});
+  const [errors, setErrors] = useState({});
   const [error, setError] = useState(null);
   const [location, setLocation] = useState({ placeName: "", lat: 0, lng: 0 });
   const [isDisabled, setIsDisabled] = useState(false);
@@ -128,6 +127,8 @@ const ParkingSpacesForm = () => {
       });
 
       setError(null);
+      setErrors({});
+
       if (formData.location) {
         const results = await nominatim.search({
           q: formData.location,
@@ -188,6 +189,11 @@ const ParkingSpacesForm = () => {
       console.log("Form submitted successfully with data:", parkingSpaceData);
       setActiveIndex(1);
     } catch (validationError) {
+      const validationErrors = {};
+      validationError.inner.forEach((error) => {
+        validationErrors[error.path] = error.message;
+      });
+      setErrors(validationErrors);
       setError(validationError.errors[0]);
     } finally {
       setIsDisabled(false);
@@ -197,9 +203,6 @@ const ParkingSpacesForm = () => {
 
   return (
     <Container className="login-container" fluid>
-      <div className="d-flex justify-content-center mb-80">
-        <Logo />
-      </div>
       <h2 className="text-center mb-40">
         {id ? "Edit Parking Space" : "Register Parking Space"}
       </h2>
@@ -214,6 +217,7 @@ const ParkingSpacesForm = () => {
             value={formData.location}
             onChange={handleInputChange}
             disabled={isDisabled || loading}
+            invalid={!!errors.location}
           />
           {errors.location && <FormFeedback>{errors.location}</FormFeedback>}
         </FormGroup>
@@ -227,6 +231,7 @@ const ParkingSpacesForm = () => {
             value={formData.numberOfSpaces}
             onChange={handleInputChange}
             disabled={isDisabled || loading}
+            invalid={!!errors.numberOfSpaces}
           />
           {errors.numberOfSpaces && (
             <FormFeedback>{errors.numberOfSpaces}</FormFeedback>
