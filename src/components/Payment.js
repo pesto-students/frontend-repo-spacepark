@@ -176,7 +176,7 @@ return matchingService ? total + price : total;
       console.error('Error creating ticket:', error);
     }
   };
-
+console.log(!isFormValid, 'Is Form valid');
 
   return (
     <div>

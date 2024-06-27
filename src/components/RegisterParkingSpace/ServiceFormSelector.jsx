@@ -30,6 +30,7 @@ const ServicePriceSelector = forwardRef((props, ref) => {
       setServicePrices(initialServicePrices);
       validatePrices(initialServicePrices);
     }
+    // eslint-disable-next-line
   }, [props.initialServices, setSelectedServices, setServicePrices]);
 
   const handleServiceChange = (selectedOptions) => {

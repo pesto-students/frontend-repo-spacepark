@@ -4,6 +4,7 @@ import { Form, Container, FormGroup, Input, Alert } from 'reactstrap';
 import Select from 'react-select';
 import DateTimePicker from './DatePicker';
 import Payment from '../Payment';
+import { searchTextAtom, parkingSpacesAtom } from '../SearchComponent';
 import { atom, useAtom } from 'jotai';
 import { serviceAtom } from '../../atom';
 
@@ -15,6 +16,8 @@ export const formDataAtom = atom({
 
 const ParkingForm = () => {
   const [error] = useState(null);
+  const [search] = useAtom(searchTextAtom);
+  const [parkingSpace] = useAtom(parkingSpacesAtom);
   const [services] = useAtom(serviceAtom); // Use serviceAtom
   const [formData, setFormData] = useAtom(formDataAtom); // Use formDataAtom
   const [dateRange, setDateRange] = useState(null); // Separate state for date range
@@ -57,7 +60,7 @@ const ParkingForm = () => {
 
   return (
     <Container className="login-container px-0" fluid>
-      <div className="formDiv">
+      <div className={(search && parkingSpace.length !== 0) ? 'formDiv mt-220' : `formDiv `}>
         <Form>
           <FormGroup>
             <Select

@@ -50,12 +50,28 @@ const DateTimePicker = ({ onChange }) => {
   };
 
   const handleCheckInTimeChange = (time) => {
+    const now = new Date();
+    const isToday = startDate && formatDate(startDate) === formatDate(now);
+  
+    if (isToday && (time.getHours() < now.getHours() || (time.getHours() === now.getHours() && time.getMinutes() <= now.getMinutes()))) {
+      setError('Check-in time must be greater than the current time.');
+      return;
+    }
+  
     setCheckInTime(time);
     setError('');
     onChange({ startDate: formatDate(startDate), endDate: formatDate(endDate), checkInTime: formatTime(time), checkOutTime: formatTime(checkOutTime) });
   };
-
+  
   const handleCheckOutTimeChange = (time) => {
+    const now = new Date();
+    const isToday = endDate && formatDate(endDate) === formatDate(now);
+  
+    if (isToday && (time.getHours() < now.getHours() || (time.getHours() === now.getHours() && time.getMinutes() <= now.getMinutes()))) {
+      setError('Check-out time must be greater than the current time.');
+      return;
+    }
+  
     if (startDate && endDate && formatDate(startDate) === formatDate(endDate)) {
       const checkInDateTime = new Date(startDate.getTime() + checkInTime.getHours() * 3600000 + checkInTime.getMinutes() * 60000);
       const checkOutDateTime = new Date(endDate.getTime() + time.getHours() * 3600000 + time.getMinutes() * 60000);
@@ -73,10 +89,13 @@ const DateTimePicker = ({ onChange }) => {
         return;
       }
     }
+  
     setCheckOutTime(time);
     setError('');
     onChange({ startDate: formatDate(startDate), endDate: formatDate(endDate), checkInTime: formatTime(checkInTime), checkOutTime: formatTime(time) });
   };
+  
+  
 
   return (
     <div className="d-flex flex-column">

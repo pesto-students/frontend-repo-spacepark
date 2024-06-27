@@ -71,7 +71,7 @@ const ParkingSpacesForm = () => {
   const [servicePrices] = useAtom(servicePricesAtom);
   const { user } = useUser();
   const servicePriceSelectorRef = useRef();
-  const [activeIndex, setActiveIndex] = useAtom(menuIndexState);
+  const [, setActiveIndex] = useAtom(menuIndexState);
 
   useEffect(() => {
     if (state && state.row) {
@@ -148,7 +148,7 @@ const ParkingSpacesForm = () => {
         services: parkingSpaceData.services,
       });
 
-      if (createService && formType == "Register Parking Space") {
+      if (createService && formType === "Register Parking Space") {
         const parkingSpaceCreation = await ParkingSapceCreation({
           userId: userId,
           serviceId: createService.id,
@@ -162,7 +162,7 @@ const ParkingSpacesForm = () => {
         }
       }
 
-      if (createService && formType == "Edit Parking Space") {
+      if (createService && formType === "Edit Parking Space") {
         console.log(state, 'state');
         const parkingSpaceId = state?.row?.id;
         const parkingSpaceUpdate = await ParkingSpaceUpdate({

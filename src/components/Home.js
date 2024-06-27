@@ -8,7 +8,6 @@ import ParkingSpaceIcon from "../assets/parking.svg";
 import Logo from "./Logo/Logo";
 import { Container, Row, Col, Button } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
-import ScrollAnimation from "react-animate-on-scroll";
 
 const Home = () => {
   const navigate = useNavigate();

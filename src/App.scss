@@ -151,10 +151,30 @@ h3{
   }
 
   .parking-spaces-list {
+    border: 1px solid lightgrey;
+    padding: 15px 5px !important;
     list-style: none;
-    padding: 0;
+    position: absolute;
+    width: 100% !important;
+    max-height: 200px !important;
+    overflow-y: scroll;
+    z-index: 9;
+    list-style: none;
+    background: white;
+    scrollbar-width: 0 !important;
   }
   
+
+.parking-spaces-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.parking-spaces-list {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
   .parking-space-item {
     padding: 10px;
     margin-bottom: 5px;
@@ -173,11 +193,13 @@ h3{
     background-color: lightgrey;
   }
   
-
+.mt-220{
+  margin-top: 220px;
+}
 
   .parking-spaces-list .selected {
-    background-color: #e0f7fa;
-    border: 1px solid #00bcd4;
+    background-color: #d6d9fb;
+    border: 1px solid #613eea;
     border-radius: 4px;
     padding: 10px;
   }
