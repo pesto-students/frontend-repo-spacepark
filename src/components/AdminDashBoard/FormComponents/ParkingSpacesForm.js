@@ -22,7 +22,8 @@ import ServicePriceSelector from "../../RegisterParkingSpace/ServiceFormSelector
 import {
   CreateService,
   ParkingSpaceUpdate,
-  ParkingSapceCreation
+  ParkingSapceCreation,
+  CreatingParkingSpaceOwner // Import the function
 } from "../../RegisterParkingSpace/RegisterHelper";
 import { useUser } from "../../../context/userContext";
 import Nominatim from "nominatim-geocoder";
@@ -253,6 +254,7 @@ const ParkingSpacesForm = () => {
           </div>
         </FormGroup>
         {error && <Alert color="danger mt-60">{error}</Alert>}
+        {error && error.includes('Username') && <Alert color="danger mt-60">{error}</Alert>}
         <Button
           type="submit"
           className="w-100 mt-3 back-color text-bold p-2 f-20"

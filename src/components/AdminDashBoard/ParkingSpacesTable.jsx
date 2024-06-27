@@ -13,19 +13,17 @@ import { useUser } from "../../context/userContext";
 import { getParkingSpacesData } from '../../helpers/getUserData'; // Replace with the actual path to your API call
 
 const columns = [
-  { id: 'serial', label: 'S.No.', minWidth: 100 },
-  { id: 'id', label: 'ParkingSpaceId', minWidth: 100 },
-  { id: 'userId', label: 'User ID', minWidth: 100 },
-  { id: 'serviceId', label: 'Service ID', minWidth: 100 },
-  { id: 'location', label: 'Location', minWidth: 200 },
-  { id: 'latitude', label: 'Latitude', minWidth: 100 },
-  { id: 'longitude', label: 'Longitude', minWidth: 100 },
-  { id: 'noOfSpaces', label: 'No. of Spaces', minWidth: 100 },
+  { id: 'serial', label: 'S.No.', minWidth: 100, align: 'center' },
+  { id: 'id', label: 'ParkingSpaceId', minWidth: 150, align: 'center' },
+  { id: 'userId', label: 'User ID', minWidth: 100, align: 'center' },
+  { id: 'serviceId', label: 'Service ID', minWidth: 120, align: 'center' },
+  { id: 'location', label: 'Location', minWidth: 100 },
+  { id: 'noOfSpaces', label: 'No. of Spaces', minWidth: 120, align: 'center' },
   { id: 'edit', label: 'Edit', minWidth: 100, align: 'center' },
 ];
 
-function createData(serial, id, userId, serviceId, location, latitude, longitude, noOfSpaces) {
-  return { serial, id, userId, serviceId, location, latitude, longitude, noOfSpaces };
+function createData(serial, id, userId, serviceId, location, noOfSpaces) {
+  return { serial, id, userId, serviceId, location, noOfSpaces };
 }
 
 export default function ParkingSpacesTable() {
@@ -50,7 +48,7 @@ export default function ParkingSpacesTable() {
         const data = await getParkingSpacesData(user.id);
         console.log(data);
         if (Array.isArray(data)) {
-          setRows(data.map((space, index) => createData(index + 1, space.id, space.userId, space.serviceId, space.location, space.latitude, space.longitude, space.noOfSpaces)));
+          setRows(data.map((space, index) => createData(index + 1, space.id, space.userId, space.serviceId, space.location, space.noOfSpaces)));
         } else {
           console.error("Data is not an array:", data);
         }

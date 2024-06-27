@@ -9,8 +9,11 @@ export const CreatingParkingSpaceOwner = async (data) => {
     });
     return response.data;
   } catch (error) {
-    if (error.response && error.response.status === 400) {
+    if (error.response && error.response.status === 409) {
       return { error: 'Email is already in use.' };
+    }
+    if (error.response && error.response.status === 410) {
+      return { error: 'Username is already in use.' };
     }
     console.error("Error creating parking space owner:", error);
     return { error: error.message };
