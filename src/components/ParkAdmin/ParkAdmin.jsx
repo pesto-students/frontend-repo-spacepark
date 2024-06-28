@@ -27,7 +27,6 @@ function ParkAdmin() {
   return (
     <>
       <h3 className="mt-4 text-center mb-80">
-        Welcome to parking owner dashboard!
       </h3>
       <Row className="mx-0 px-0">
         <Col className="" style={{ cursor: "pointer" }}>

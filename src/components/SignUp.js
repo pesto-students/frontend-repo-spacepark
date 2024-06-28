@@ -16,7 +16,7 @@ const SignUp = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
-  const { setUser } = useUser();
+  const { setUser, setToken, setRole } = useUser();
 
   const handleChange = (e) => {
     setFormData({
@@ -48,8 +48,9 @@ const SignUp = () => {
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('role', user.role);
         localStorage.setItem('token', token);
-
-        setUser(user); // Set the user atom
+        setUser(user); 
+        setToken(token);
+        setRole(user.role);
 
         navigate('/bookings');
       } else {
