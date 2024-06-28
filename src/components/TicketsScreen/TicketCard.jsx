@@ -21,10 +21,10 @@ const TicketCard = ({ ticket }) => {
       <div className="ticket-content">
         <h3 className="ticketId">Ticket ID: {id}</h3>
         <p className={`status ${status}`}>Status: {status}</p>
-        {/* <div className="timings"> */}
+        <div className="timings">
           <p>Start Date: {startDate}</p>
           <p>End Date: {endDate}</p>
-        {/* </div> */}
+        </div>
         <div className="info user">
           <p>User ID: {userId}</p>
           <p>Car Number: {carNumber}</p>

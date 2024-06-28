@@ -26,14 +26,15 @@
 .timings {
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
 }
 
 .timings p {
-  // background-color: rgb(188, 231, 205);
+  background-color: rgb(188, 231, 205);
   padding: 10px;
-  margin: 0 10px;
+  margin: 5px;
+  font-weight: 600;
 }
 
 .active {
