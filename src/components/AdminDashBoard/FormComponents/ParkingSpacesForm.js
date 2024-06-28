@@ -23,7 +23,6 @@ import {
   CreateService,
   ParkingSpaceUpdate,
   ParkingSapceCreation,
-  CreatingParkingSpaceOwner // Import the function
 } from "../../RegisterParkingSpace/RegisterHelper";
 import { useUser } from "../../../context/userContext";
 import Nominatim from "nominatim-geocoder";

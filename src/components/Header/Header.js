@@ -19,7 +19,7 @@ import { useUser } from '../../context/userContext';
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [sideNavOpen, setSideNavOpen] = useState(false);
-  const { user, setUser , role, setRole, setToken} = useUser();
+  const { user, setUser, role, setRole, setToken } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,8 +48,6 @@ const Header = () => {
   };
 
   const isAuthenticated = user !== null;
-  // const role = user?.role || localStorage.getItem('role');
-  // console.log(role, 'role');
 
   return (
     <>
@@ -62,55 +60,46 @@ const Header = () => {
         </NavbarToggler>
         <Collapse isOpen={isOpen} navbar className="justify-content-end">
           <Nav navbar className='align-items-center'>
-           { !isAuthenticated ? 
-           
-           <>
-           <NavItem>
-              <Link to="/blog">Blog</Link>
-            </NavItem> 
-            <NavItem>
-              <Link to="/about">About us</Link>
-            </NavItem>
-           </>
-            
-            : 
-           role === 'user' && <NavItem>
-            <Link to="/tickets">Tickets</Link>
-          </NavItem>
-            }
-           
-            {isAuthenticated ? (
+            {!isAuthenticated ? (
               <>
-
-{role ===  'user' && (
-  <>
                 <NavItem>
-                <Link to="/bookings">Booking</Link>
+                  <Link to="/blog">Blog</Link>
                 </NavItem>
                 <NavItem>
-                <Link to="/profile">Profile</Link>
+                  <Link to="/about">About us</Link>
                 </NavItem>
-                </>
+              </>
+            ) : (
+              <>
+                {role === 'user' && (
+                  <>
+                    <NavItem>
+                      <Link to="/tickets">Tickets</Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/bookings">Booking</Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/profile">Profile</Link>
+                    </NavItem>
+                  </>
                 )}
                 {role === 'admin' && (
                   <NavItem>
-                    <Link to="/admindashboard">
-                      Admin Dashboard
-                    </Link>
+                    <Link to="/admindashboard">Admin Dashboard</Link>
                   </NavItem>
                 )}
-                 {role === 'parkAdmin' && (
+                {role === 'parkAdmin' && (
                   <NavItem>
-                    <Link to="/parkingOwner">
-                      Park Admin Dashboard
-                    </Link>
+                    <Link to="/parkingOwner">Park Admin Dashboard</Link>
                   </NavItem>
                 )}
                 <NavItem>
                   <Button className="ml-2 custom-btn" onClick={handleLogout}>Logout</Button>
                 </NavItem>
               </>
-            ) : (
+            )}
+            {!isAuthenticated && (
               <>
                 <NavItem>
                   <Link to="/login">
@@ -133,26 +122,46 @@ const Header = () => {
           <img src={CrossIcon} alt="close" onClick={toggleSideNav} className="close-icon" />
         </div>
         <ListGroup className='list-group-data'>
-          <ListGroupItem>
-            <Link to="/blog" onClick={toggleSideNav}>Blog</Link>
-          </ListGroupItem>
-          <ListGroupItem>
-            <Link to="/about" onClick={toggleSideNav}>About us</Link>
-          </ListGroupItem>
-          {isAuthenticated ? (
+          {!isAuthenticated ? (
             <>
+              <ListGroupItem>
+                <Link to="/blog" onClick={toggleSideNav}>Blog</Link>
+              </ListGroupItem>
+              <ListGroupItem>
+                <Link to="/about" onClick={toggleSideNav}>About us</Link>
+              </ListGroupItem>
+            </>
+          ) : (
+            <>
+              {role === 'user' && (
+                <>
+                  <ListGroupItem>
+                    <Link to="/tickets" onClick={toggleSideNav}>Tickets</Link>
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <Link to="/bookings" onClick={toggleSideNav}>Booking</Link>
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <Link to="/profile" onClick={toggleSideNav}>Profile</Link>
+                  </ListGroupItem>
+                </>
+              )}
+              {role === 'admin' && (
+                <ListGroupItem>
+                  <Link to="/admindashboard" onClick={toggleSideNav}>Admin Dashboard</Link>
+                </ListGroupItem>
+              )}
+              {role === 'parkAdmin' && (
+                <ListGroupItem>
+                  <Link to="/parkingOwner" onClick={toggleSideNav}>Park Admin Dashboard</Link>
+                </ListGroupItem>
+              )}
               <ListGroupItem>
                 <Button className="mb-btn" onClick={handleLogout}>Logout</Button>
               </ListGroupItem>
-              {role === 'admin' && (
-                <ListGroupItem>
-                  <Link to="/admindashboard" onClick={toggleSideNav}>
-                    <Button className="mb-btn">Admin Dashboard</Button>
-                  </Link>
-                </ListGroupItem>
-              )}
             </>
-          ) : (
+          )}
+          {!isAuthenticated && (
             <>
               <ListGroupItem>
                 <Link to="/login" onClick={toggleSideNav}>
