@@ -25,7 +25,6 @@ import QRCodeDisplay from "./components/QRCodeDisplay/QRCodeDisplay";
 import QRCodeScanner from "./components/QRCodeScanner/QRCodeScanner";
 import { UserProvider, useUser } from "./context/userContext";
 import ParkingOwnerScreen from "./components/QRCodeScanner/ParkingOwnerScreen";
-import Footer from "./components/Footer/Footer";
 
 const ProtectedRoute = ({ element, roles = [], ...rest }) => {
   const { isAuthenticated, role } = useUser();
@@ -35,13 +34,13 @@ const ProtectedRoute = ({ element, roles = [], ...rest }) => {
   }
 
   if (roles.length && !roles.includes(role)) {
-    console.log(role, 'Role');
+    console.log(role, "Role");
     switch (role) {
-      case 'user':
+      case "user":
         return <Navigate to="/bookings" replace />;
-      case 'admin':
+      case "admin":
         return <Navigate to="/admindashboard" replace />;
-      case 'parkAdmin':
+      case "parkAdmin":
         return <Navigate to="/parkingOwner" replace />;
       default:
         return <Navigate to="/unauthorized" replace />;
@@ -60,11 +59,11 @@ const RestrictedRoute = ({ element, restrictedRoles = [], ...rest }) => {
 
   if (restrictedRoles.includes(role)) {
     switch (role) {
-      case 'user':
+      case "user":
         return <Navigate to="/bookings" replace />;
-      case 'admin':
+      case "admin":
         return <Navigate to="/admindashboard" replace />;
-      case 'parkAdmin':
+      case "parkAdmin":
         return <Navigate to="/parkingOwner" replace />;
       default:
         return <Navigate to="/unauthorized" replace />;
@@ -90,13 +89,19 @@ function App() {
             <Route
               path="/bookings"
               element={
-                <RestrictedRoute element={<MapComponent />} restrictedRoles={["parkAdmin"]} />
+                <RestrictedRoute
+                  element={<MapComponent />}
+                  restrictedRoles={["parkAdmin"]}
+                />
               }
             />
             <Route
               path="/tickets"
               element={
-                <RestrictedRoute element={<TicketScreen />} restrictedRoles={["parkAdmin"]} />
+                <RestrictedRoute
+                  element={<TicketScreen />}
+                  restrictedRoles={["parkAdmin"]}
+                />
               }
             />
             <Route
@@ -130,7 +135,7 @@ function App() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
-          <Footer />
+          {/* <Footer /> */}
         </Router>
       </UserProvider>
     </React.StrictMode>

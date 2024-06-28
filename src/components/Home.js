@@ -8,10 +8,11 @@ import ParkingSpaceIcon from "../assets/parking.svg";
 import Logo from "./Logo/Logo";
 import { Container, Row, Col, Button } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
+import Footer from "./Footer/Footer";
 
 const Home = () => {
   const navigate = useNavigate();
-  return (
+  return (<>
     <Container fluid className="custom-container">
       <Row className="justify-content-center align-items-center">
         <Col xs={12} md={6} className="text-center mb-80">
@@ -50,7 +51,7 @@ const Home = () => {
           xs={6}
           md={6}
           className="d-flex align-items-center justify-content-center col-md-6 mb-4"
-        >
+          >
           <img src={HomeIcon} alt="Home Icon" className="img-fluid" />
         </Col>
       </Row>
@@ -59,19 +60,19 @@ const Home = () => {
           xs={6}
           md={6}
           className="d-flex align-items-center justify-content-center col-md-6 mb-4"
-        >
+          >
           {/* <ScrollAnimation
             duration={5}
             animateIn="wobble"
             initiallyVisible={true}
-          > */}
+            > */}
           <img src={CarIcon} alt="Car Icon" className="img-fluid" />
           {/* </ScrollAnimation> */}
         </Col>
         <Col
           md={6}
           className="d-flex align-items-center justify-content-center mb-4"
-        >
+          >
           <div style={{ width: "70%" }}>
             <h3 className="text-center my-4 pb-4">
               Finding a parking spot can be frustrating.
@@ -218,6 +219,8 @@ const Home = () => {
         </Col>
       </Row>
     </Container>
+    <Footer />
+          </>
   );
 };
 
