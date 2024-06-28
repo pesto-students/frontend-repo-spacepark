@@ -1,5 +1,5 @@
 // src/App.js
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import "./App.scss";
 import {
   BrowserRouter as Router,
@@ -7,24 +7,40 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
+import { UserProvider, useUser } from "./context/userContext";
 import Home from "./components/Home";
 import SignUp from "./components/SignUp";
-import Login from "./components/Login/Login";
 import Header from "./components/Header/Header";
-import MapComponent from "./components/MapComponent";
-import RegisterParkingSpace from "./components/RegisterParkingSpace/RegisterParkingSpace";
-import TicketScreen from "./components/TicketsScreen/TicketScreen";
-import AdminDashboard from "./components/AdminDashBoard/AdminDashboard";
-import ParkAdmin from "./components/ParkAdmin/ParkAdmin";
-import UserFormComponent from "./components/AdminDashBoard/FormComponents/UserFormComponent";
-import ParkingSpacesForm from "./components/AdminDashBoard/FormComponents/ParkingSpacesForm";
-import AboutPage from "./components/StaticComponents/AboutUs";
-import BlogPage from "./components/StaticComponents/BlogPage";
-import Profile from "./components/Profile/Profile";
-import QRCodeDisplay from "./components/QRCodeDisplay/QRCodeDisplay";
-import QRCodeScanner from "./components/QRCodeScanner/QRCodeScanner";
-import { UserProvider, useUser } from "./context/userContext";
-import ParkingOwnerScreen from "./components/QRCodeScanner/ParkingOwnerScreen";
+const Login = lazy(() => import("./components/Login/Login"));
+const MapComponent = lazy(() => import("./components/MapComponent"));
+const RegisterParkingSpace = lazy(() =>
+  import("./components/RegisterParkingSpace/RegisterParkingSpace")
+);
+const TicketScreen = lazy(() =>
+  import("./components/TicketsScreen/TicketScreen")
+);
+const AdminDashboard = lazy(() =>
+  import("./components/AdminDashBoard/AdminDashboard")
+);
+const ParkAdmin = lazy(() => import("./components/ParkAdmin/ParkAdmin"));
+const UserFormComponent = lazy(() =>
+  import("./components/AdminDashBoard/FormComponents/UserFormComponent")
+);
+const ParkingSpacesForm = lazy(() =>
+  import("./components/AdminDashBoard/FormComponents/ParkingSpacesForm")
+);
+const AboutPage = lazy(() => import("./components/StaticComponents/AboutUs"));
+const BlogPage = lazy(() => import("./components/StaticComponents/BlogPage"));
+const Profile = lazy(() => import("./components/Profile/Profile"));
+const QRCodeDisplay = lazy(() =>
+  import("./components/QRCodeDisplay/QRCodeDisplay")
+);
+const QRCodeScanner = lazy(() =>
+  import("./components/QRCodeScanner/QRCodeScanner")
+);
+const ParkingOwnerScreen = lazy(() =>
+  import("./components/QRCodeScanner/ParkingOwnerScreen")
+);
 
 const ProtectedRoute = ({ element, roles = [], ...rest }) => {
   const { isAuthenticated, role } = useUser();
@@ -79,62 +95,67 @@ function App() {
       <UserProvider>
         <Router>
           <Header />
-          <Routes>
-            <Route path="/display" element={<QRCodeDisplay />} />
-            <Route path="/scanner" element={<QRCodeScanner />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/registerspace" element={<RegisterParkingSpace />} />
-            <Route
-              path="/bookings"
-              element={
-                <RestrictedRoute
-                  element={<MapComponent />}
-                  restrictedRoles={["parkAdmin"]}
-                />
-              }
-            />
-            <Route
-              path="/tickets"
-              element={
-                <RestrictedRoute
-                  element={<TicketScreen />}
-                  restrictedRoles={["parkAdmin"]}
-                />
-              }
-            />
-            <Route
-              path="/parkingOwner"
-              element={
-                <ProtectedRoute element={<ParkAdmin />} roles={["parkAdmin"]} />
-              }
-            />
-            <Route
-              path="/admindashboard"
-              element={
-                <ProtectedRoute
-                  element={<AdminDashboard />}
-                  roles={["admin"]}
-                />
-              }
-            />
-            <Route
-              path="/users/:id"
-              element={<ProtectedRoute element={<UserFormComponent />} />}
-            />
-            <Route
-              path="/parkingspaces/:id"
-              element={<ProtectedRoute element={<ParkingSpacesForm />} />}
-            />
-            <Route
-              path="/activeUsers/:id"
-              element={<ProtectedRoute element={<ParkingOwnerScreen />} />}
-            />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/display" element={<QRCodeDisplay />} />
+              <Route path="/scanner" element={<QRCodeScanner />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/registerspace" element={<RegisterParkingSpace />} />
+              <Route
+                path="/bookings"
+                element={
+                  <RestrictedRoute
+                    element={<MapComponent />}
+                    restrictedRoles={["parkAdmin"]}
+                  />
+                }
+              />
+              <Route
+                path="/tickets"
+                element={
+                  <RestrictedRoute
+                    element={<TicketScreen />}
+                    restrictedRoles={["parkAdmin"]}
+                  />
+                }
+              />
+              <Route
+                path="/parkingOwner"
+                element={
+                  <ProtectedRoute
+                    element={<ParkAdmin />}
+                    roles={["parkAdmin"]}
+                  />
+                }
+              />
+              <Route
+                path="/admindashboard"
+                element={
+                  <ProtectedRoute
+                    element={<AdminDashboard />}
+                    roles={["admin"]}
+                  />
+                }
+              />
+              <Route
+                path="/users/:id"
+                element={<ProtectedRoute element={<UserFormComponent />} />}
+              />
+              <Route
+                path="/parkingspaces/:id"
+                element={<ProtectedRoute element={<ParkingSpacesForm />} />}
+              />
+              <Route
+                path="/activeUsers/:id"
+                element={<ProtectedRoute element={<ParkingOwnerScreen />} />}
+              />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
+          </Suspense>
           {/* <Footer /> */}
         </Router>
       </UserProvider>
