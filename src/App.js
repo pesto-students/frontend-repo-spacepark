@@ -11,6 +11,7 @@ import { UserProvider, useUser } from "./context/userContext";
 import Home from "./components/Home";
 import SignUp from "./components/SignUp";
 import Header from "./components/Header/Header";
+import Loader from "./components/QRCodeDisplay/Loader";
 const Login = lazy(() => import("./components/Login/Login"));
 const MapComponent = lazy(() => import("./components/MapComponent"));
 const RegisterParkingSpace = lazy(() =>
@@ -95,7 +96,7 @@ function App() {
       <UserProvider>
         <Router>
           <Header />
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loader />}>
             <Routes>
               <Route path="/display" element={<QRCodeDisplay />} />
               <Route path="/scanner" element={<QRCodeScanner />} />

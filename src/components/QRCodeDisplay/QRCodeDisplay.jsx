@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
-import Loader from "./FramerMotion";
+import Loader from "./Loader";
 import "./QRCodeDisplay.scss";
 import { useUser } from "../../context/userContext";
 
 const QRCodeDisplay = ({ userId }) => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
-console.log(useUser(), 'User');
-const data1 =  useUser();
+  console.log(useUser(), "User");
+  const data1 = useUser();
   useEffect(() => {
     const fetchQRCode = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}users/qrcode?id=${data1.user.id}`);
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}users/qrcode?id=${data1.user.id}`
+        );
         const data = await response.json();
         setQrCodeUrl(data.qrCodeUrl);
       } catch (error) {

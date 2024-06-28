@@ -9,7 +9,7 @@ const LoadingAnimation = () => {
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
       />
-      <p>Loading QR Code check...</p>
+      <p>Loading...</p>
     </div>
   );
 };
