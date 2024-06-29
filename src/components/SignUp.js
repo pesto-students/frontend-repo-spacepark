@@ -37,32 +37,45 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}users`, formData, {
+      // First API call to sign up the user
+      const signupResponse = await axios.post(`${process.env.REACT_APP_API_URL}users`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-      if (response.status === 201) {
-        const { token, user } = response.data;
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('role', user.role);
-        localStorage.setItem('token', token);
-        setUser(user); 
-        setToken(token);
-        setRole(user.role);
+      if (signupResponse.status === 201) {
+        const { token } = signupResponse.data;
+        console.log(token , 'Token');
+        // Second API call to fetch user details
+        const userResponse = await axios.get(`${process.env.REACT_APP_API_URL}users/verify`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
 
-        navigate('/bookings');
+        const user = userResponse.data;
+
+        if(user){
+          
+                  localStorage.setItem('user', JSON.stringify(user));
+                  localStorage.setItem('role', user.role);
+                  localStorage.setItem('token', token);
+                  setUser(user); 
+                  setToken(token);
+                  setRole(user.role);
+                  navigate('/bookings');
+
+        }
       } else {
-        setError(response.data.message);
+        setError(signupResponse.data.message);
       }
     } catch (err) {
       setError(err.response ? err.response.data.message : 'Something went wrong. Please try again later.');
     } finally {
-      setLoading(false); // Set loading to false
+      setLoading(false);
     }
   };
-
   return (
     <Container className="login-container" fluid>
       <div className="d-flex justify-content-center align-items-center">
