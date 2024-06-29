@@ -30,7 +30,12 @@ const ParkingForm = () => {
 
   // Validation logic
   useEffect(() => {
-    const isValid = formData.services.length > 0 && dateRange;
+    const isDateRangeValid = dateRange && dateRange.checkInTime !== null &&
+                             dateRange.checkOutTime !== null &&
+                             dateRange.endDate !== null &&
+                             dateRange.startDate !== null;
+  
+    const isValid = formData.services.length > 0 && isDateRangeValid;
     setIsFormValid(isValid);
   }, [formData, dateRange]);
 
@@ -50,6 +55,8 @@ const ParkingForm = () => {
   };
 
   const handleDateRangeChange = (dateRange) => {
+    console.log(dateRange, ';Date Range');
+
     setDateRange(dateRange); // Update the date range state
   };
 
