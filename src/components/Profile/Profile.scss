@@ -1,0 +1,198 @@
+/* Profile component styles */
+
+// Define gradients for light and dark themes
+$light-gradient-start: #007bff;
+$light-gradient-end: #28a745;
+
+$dark-gradient-start: #343a40;
+$dark-gradient-end: #6c757d;
+
+.profile-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 90%;
+  max-width: 1200px;
+  margin: 50px auto;
+  margin-top: 180px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  color: white; /* Set text color to white for contrast */
+
+  // Set default light theme gradient
+  background: linear-gradient(to right, $light-gradient-start, $light-gradient-end);
+
+  .profile-info,
+  .qr-code-container {
+    width: 48%;
+  }
+
+  .profile-info {
+    padding: 20px;
+    border-right: 1px solid #ccc;
+
+    p {
+      margin-bottom: 16px;
+      font-size: 1.2rem;
+      color: white; /* Adjust text color for profile info */
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+
+      button {
+        flex: 1;
+        padding: 14px;
+        font-size: 1rem;
+        background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background for buttons */
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.3); /* Lighten button background on hover */
+        }
+      }
+
+      .edit-button {
+        margin-right: 12px;
+      }
+    }
+
+    .form-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+
+      button {
+        flex: 1;
+        margin-right: 12px;
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-top: 20px;
+
+      .profile-input {
+        width: 100%;
+        padding: 14px;
+        font-size: 1rem;
+        margin: 12px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        transition: border-color 0.3s ease;
+
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+        }
+      }
+
+      .save-button,
+      .cancel-button {
+        width: 48%;
+        padding: 14px;
+        font-size: 1rem;
+        border-radius: 6px;
+
+        &.save-button {
+          background-color: #218838;
+          &:hover {
+            background-color: #1e7e34;
+          }
+        }
+
+        &.cancel-button {
+          background-color: #c82333;
+          &:hover {
+            background-color: #bd2130;
+          }
+        }
+      }
+    }
+  }
+
+  .qr-code-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -10px;
+
+    .qrcode-section {
+      margin-top: 30px;
+
+      .qr-code-img {
+        width: 220px;
+        height: 220px;
+        border-radius: 10px;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .download-button {
+        margin-top: 20px;
+        margin-left: 40px;
+        padding: 14px 28px;
+        font-size: 1rem;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+  }
+
+  // Dark theme variant
+  &.dark-theme {
+    background: linear-gradient(to right, $dark-gradient-start, $dark-gradient-end);
+
+    .profile-info {
+      p {
+        color: white; /* Adjust text color for profile info */
+      }
+
+      .action-buttons button {
+        background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background for buttons */
+        color: white;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.3); /* Lighten button background on hover */
+        }
+      }
+
+      .form-buttons button {
+        background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background for buttons */
+        color: white;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.3); /* Lighten button background on hover */
+        }
+      }
+    }
+
+    .qr-code-container {
+      .download-button {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+  }
+}

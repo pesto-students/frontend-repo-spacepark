@@ -1,0 +1,109 @@
+.header-div .navbar-brand,
+.header-div .nav-link,
+.header-div .btn {
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
+.header-div{
+    background-color: #653eea;
+    padding: 18px;
+    color: white;
+}
+
+.custom-btn{
+  color:#653eea !important;
+  background-color: #f1f1f1 !important;
+}
+
+.mb-btn{
+  background-color: #653eea !important;
+  color: #f1f1f1 !important;
+  font-size: 18px !important;
+
+}
+.burger-icon{
+  border: none !important;
+}
+
+.side-nav {
+    // display: none;
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1050;
+    top: 0;
+    right: 0;
+    background-color: #f1f1f1;
+    overflow-x: hidden;
+    transition: 0.5s;
+  }
+  
+  .side-nav.open {
+    width: 250px;
+    // display: block;
+  }
+  
+  .side-nav a {
+    padding: 8px 8px 8px 20px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #653eea;
+    display: block;
+    transition: 0.3s;
+  }
+  
+  .side-nav a:hover {
+    color: #f1f1f1;
+  }
+  
+  .side-nav .closebtn {
+    position: absolute;
+    top: 0;
+    left: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+  
+  .side-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+  }
+  .header-div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .side-nav-header {
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
+  }
+  
+  .close-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+
+  .list-group-data{
+
+    .list-group-item{
+      padding: 0 !important;
+    }
+
+  }
+  
+  .nav-item a{
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 17px;
+    padding: 10px 12px;
+  }
+  

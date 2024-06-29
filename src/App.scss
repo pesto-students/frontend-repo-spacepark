@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
+*{
+    font-family: 'Nunito', sans-serif;
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    // font-size: 18px;
+}
+
+h3{
+    font-weight: 600 !important;
+}
+.map-component{
+    display: flex;
+    justify-content: space-between;
+}
+
+.map-wrapper{
+    // display: flex;
+}
+
+.custom-button {
+    color: white !important;
+    background-color: #613eea !important;
+}
+
+.pri-color {
+    color: #613eea !important
+}
+
+.bold{
+    font-weight: bold;
+}   
+
+.linear-color{
+  height :300px;
+  position: absolute;
+  bottom: 0;
+  left: 0; /* Optional: Set left to 0 for full width */
+  width: 100%; /* Optional: Set width to 100% for full width */
+  background-image: linear-gradient(to top right, #613eea 20%, white 20%);
+    // background-image: linear-gradient(to top right, #613eea 20%, white 20%)
+
+}
+
+/* Apply a linear gradient background to the column */
+.col-tilted {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(to top right, red, yellow);
+  }
+  
+  /* Create a pseudo-element to mask the gradient */
+  .col-tilted::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom right, transparent 0%, transparent 30%, white 30%, white 70%, transparent 70%, transparent 100%);
+    transform: rotate(-45deg); /* Tilt the mask */
+  }
+  
+  .custom-container{
+    max-width: 1500px;
+  }
+
+  .text-color{
+    color: #613eea;
+    text-decoration: none;
+  }
+  .back-color{
+    background-color: #613eea !important;
+  }
+
+  .mb-80{
+    margin-bottom: 50px;
+  }
+
+  .text-bold{
+    font-weight: bold !important;
+  }
+
+  .wh-color{
+    color: white !important;
+  }
+  .login-container{
+    max-width: 600px;
+    
+  }
+
+  .mt-80{
+    margin-top: 50px;
+  }
+
+  .field-val{
+    border-bottom: 1px solid gray !important;
+    padding: 6px 12px !important;
+    font-size: 20px !important;
+    border-top: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .mb-40{
+    margin-bottom: 30px;
+  }
+
+  .f-20{
+    font-size: 20px !important;
+  }
+
+  .form-check{
+    // padding-left: 2.5em !important; 
+    margin: 1.5em 16px !important
+  }
+
+  .f-25{
+    font-size: 25px !important;
+    }
+
+    .fs-20{
+      font-size: 20px !important;
+    }
+    
+    .border-cl{
+      margin-right: 1em !important;
+      border: 1px solid gray !important;
+      border-radius: 3px !important;
+  }
+
+  .custom-card{
+    max-width: 450px;
+  }
+
+  .mt-60{
+    margin-top: 60px !important;
+  }
+
+  .mt-40{
+    margin-top: 40px !important;
+  }
+
+  .search-com{
+    border: 1px solid gray !important;
+    padding: 12px !important;
+    // max-width: 500px !important;
+  }
+
+  .parking-spaces-list {
+    border: 1px solid lightgrey;
+    padding: 15px 5px !important;
+    list-style: none;
+    position: absolute;
+    width: 100% !important;
+    max-height: 200px !important;
+    overflow-y: scroll;
+    z-index: 9;
+    list-style: none;
+    background: white;
+    scrollbar-width: 0 !important;
+  }
+  
+
+.parking-spaces-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.parking-spaces-list {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+  .parking-space-item {
+    padding: 10px;
+    margin-bottom: 5px;
+    color: #613eea;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .parking-space-item:hover {
+    background-color: #f0f0f0;
+  }
+
+  .active-menu{
+    cursor: pointer;
+    background-color: lightgrey;
+  }
+  
+.mt-220{
+  margin-top: 220px;
+}
+
+  .parking-spaces-list .selected {
+    background-color: #d6d9fb;
+    border: 1px solid #613eea;
+    border-radius: 4px;
+    padding: 10px;
+  }
+  
+  .parking-space-item {
+    cursor: pointer;
+  }
+  
+  .parking-space-item:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .parking-space-item:active {
+    background-color: #e0e0e0;
+  }
+  
+  
+  .mr-10{
+    margin-right: 10px !important;
+  }
+
+  .error{
+    color: red;
+  }
+  .data-ticket{
+    display: flex;
+    align-items: center;
+    width: 100vw!important;
+    height: 90vh !important;
+    justify-content: center;
+    border-radius: 50%;
+    // margin-top: 50%;
+    // background-color: bisque;
+    margin: auto;
+    
+  }

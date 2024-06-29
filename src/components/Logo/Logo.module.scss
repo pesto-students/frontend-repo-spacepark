@@ -1,0 +1,47 @@
+/* src/components/Signup.scss */
+// @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+
+
+/* Logo.module.scss */
+.logoDesign {
+  display: flex;
+  align-items: baseline;
+  font-size: 25px;
+  letter-spacing: 8px;
+  margin-top: 80px;
+
+  .firstDiv {
+    color: #613eea;
+  }
+
+  .secondDiv {
+    padding: 14px 17px;
+    color: white;
+    background-color: #613eea;
+    border-radius: 262% / 337%;
+    border-top-left-radius: 0;
+  }
+}
+
+  
+
+  .small-logo-design {
+    display: flex;
+    align-items: baseline;
+    font-size: 20px;
+    letter-spacing: 8px;
+    margin-top: 20px;
+    .small-first-div {
+      color: #613EEA;
+    }
+  
+    .small-second-div {
+      padding: 20px 30px;
+      color: white;
+      background-color: #613EEA;
+      border-radius: 262% / 337%;
+      border-top-left-radius: 0;
+    }
+  }
+  

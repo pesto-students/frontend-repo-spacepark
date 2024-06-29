@@ -1,0 +1,45 @@
+.qr-code-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #666;
+  }
+  .loading-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #ccc;
+      border-radius: 50%;
+      border-top-color: #007bff;
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      color: #888;
+    }
+  }
+}
