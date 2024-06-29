@@ -16,6 +16,7 @@ const TicketScreen = () => {
   const fetchTickets = async (type) => {
     const data = await fetchTicketsByType(type);
     setTickets(data);
+    console.log("......tkt...", tickets);
   };
 
   const handleTabClick = (type) => {

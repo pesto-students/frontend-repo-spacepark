@@ -15,6 +15,7 @@ const TicketCard = ({ ticket }) => {
     price,
     status,
   } = ticket;
+  ticket.status = ticket.status.toLowerCase();
 
   return (
     <div className={`ticket-container ${status}`}>
