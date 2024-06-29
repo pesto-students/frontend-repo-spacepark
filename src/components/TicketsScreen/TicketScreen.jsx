@@ -1,19 +1,23 @@
 // TicketScreen.js
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { fetchTicketsByType } from "./fetchTickets";
 import TicketCard from "./TicketCard";
 import "./TicketScreen.scss";
 import { useAtom } from "jotai";
 import { Button } from "reactstrap";
 import { parkingSpacesAtom } from "../SearchComponent";
+import { useUser } from "../../context/userContext";
 const TicketScreen = () => {
   const [tickets, setTickets] = useState([]);
   const [, setParkingSpace] = useAtom(parkingSpacesAtom);
   const [selectedType, setSelectedType] = useState("present");
 
+  const { user } = useUser();
+
+  const userId = user.id;
   useEffect(() => {
-    fetchTickets(selectedType);
+    fetchTickets(selectedType, userId);
     // eslint-disable-next-line
   }, [selectedType]);
 
@@ -22,8 +26,8 @@ const TicketScreen = () => {
     // eslint-disable-next-line
   }, []);
 
-  const fetchTickets = async (type) => {
-    const data = await fetchTicketsByType(type);
+  const fetchTickets = async (type, userId) => {
+    const data = await fetchTicketsByType(type, userId);
     setTickets(data);
     console.log("......tkt...", tickets);
   };

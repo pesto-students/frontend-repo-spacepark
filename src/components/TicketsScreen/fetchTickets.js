@@ -37,10 +37,10 @@ const sampleTickets = [
   // },
 ];
 
-const fetchTicketsByType = async (type) => {
+const fetchTicketsByType = async (type, userId) => {
   try {
     const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}api/tickets?type=${type}`
+      `${process.env.REACT_APP_API_URL}api/tickets?type=${type}&userId=${userId}`
     );
 
     console.log("fetch res", response);
