@@ -1,6 +1,6 @@
 // TicketScreen.js
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { fetchTicketsByType } from "./fetchTickets";
 import TicketCard from "./TicketCard";
 import "./TicketScreen.scss";
