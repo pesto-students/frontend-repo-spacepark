@@ -11,7 +11,7 @@ import { UserProvider, useUser } from "./context/userContext";
 import Home from "./components/Home";
 import SignUp from "./components/SignUp";
 import Header from "./components/Header/Header";
-import Loader from "./components/Loader/Loader";
+import Loader from "./components/QRCodeDisplay/Loader";
 const Login = lazy(() => import("./components/Login/Login"));
 const MapComponent = lazy(() => import("./components/MapComponent"));
 const RegisterParkingSpace = lazy(() =>

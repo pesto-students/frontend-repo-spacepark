@@ -224,3 +224,15 @@ h3{
   .error{
     color: red;
   }
+  .data-ticket{
+    display: flex;
+    align-items: center;
+    width: 100vw!important;
+    height: 90vh !important;
+    justify-content: center;
+    border-radius: 50%;
+    // margin-top: 50%;
+    // background-color: bisque;
+    margin: auto;
+    
+  }
