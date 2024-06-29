@@ -14,12 +14,13 @@ const TicketScreen = () => {
 
   useEffect(() => {
     fetchTickets(selectedType);
+    // eslint-disable-next-line
   }, [selectedType]);
 
-  useEffect( () => {
+  useEffect(() => {
     setParkingSpace([]);
-     // eslint-disable-next-line
-  },[])
+    // eslint-disable-next-line
+  }, []);
 
   const fetchTickets = async (type) => {
     const data = await fetchTicketsByType(type);

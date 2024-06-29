@@ -9,7 +9,7 @@ const LoadingAnimation = () => {
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
       />
-      <p>Loading...</p>
+      <p>Loading Alt...</p>
     </div>
   );
 };
