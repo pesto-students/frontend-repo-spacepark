@@ -20,7 +20,7 @@
   padding-bottom: 1px;
   margin: 5px;
   width: 100%;
-  background: #df6717ec;
+  background: #f35907;
 }
 
 .timings {
@@ -37,8 +37,8 @@
   font-weight: 600;
 }
 
-.active {
-  background-color: rgb(183, 241, 183);
+.booked {
+  background-color: rgb(144, 226, 241);
 }
 .checked-in {
   background-color: rgb(240, 173, 173);
@@ -58,9 +58,9 @@
 }
 
 .ticket-content {
-  width: 90%; /* Adjust width as needed */
+  width: 90%;
   height: 95%;
-  padding: 20px; /* Adjust height as needed */
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

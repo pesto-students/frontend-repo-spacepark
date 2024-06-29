@@ -14,8 +14,12 @@ const TicketCard = ({ ticket }) => {
     endDate,
     price,
     status,
+    checkInTime,
+    checkOutTime,
   } = ticket;
   ticket.status = ticket.status.toLowerCase();
+
+  console.log("card ", ticket);
 
   return (
     <div className={`ticket-container ${status}`}>
@@ -23,8 +27,8 @@ const TicketCard = ({ ticket }) => {
         <h3 className="ticketId">Ticket ID: {id}</h3>
         <p className={`status ${status}`}>Status: {status}</p>
         <div className="timings">
-          <p>Start Date: {startDate}</p>
-          <p>End Date: {endDate}</p>
+          <p>Start Time: {`${startDate}  ${checkInTime}`}</p>
+          <p>End Time: {`${endDate}  ${checkOutTime}`}</p>
         </div>
         <div className="info user">
           <p>User ID: {userId}</p>

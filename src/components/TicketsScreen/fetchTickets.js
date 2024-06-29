@@ -42,6 +42,8 @@ const fetchTicketsByType = async (type) => {
     const response = await axios.get(
       `${process.env.REACT_APP_API_URL}api/tickets?type=${type}`
     );
+
+    console.log("fetch res", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching tickets:", error);
